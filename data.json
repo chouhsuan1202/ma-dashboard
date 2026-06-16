@@ -1,30 +1,30 @@
 {
  "MU": {
-  "error": "HTTP Error 402: Payment Required"
+  "error": "免費方案未支援"
  },
  "WDC": {
-  "error": "HTTP Error 402: Payment Required"
+  "error": "免費方案未支援"
  },
  "STX": {
-  "error": "HTTP Error 402: Payment Required"
+  "error": "免費方案未支援"
  },
  "SNDK": {
-  "error": "HTTP Error 402: Payment Required"
+  "error": "免費方案未支援"
  },
  "LRCX": {
-  "error": "HTTP Error 402: Payment Required"
+  "error": "免費方案未支援"
  },
  "AMAT": {
-  "error": "HTTP Error 402: Payment Required"
+  "error": "免費方案未支援"
  },
  "KLAC": {
-  "error": "HTTP Error 402: Payment Required"
+  "error": "免費方案未支援"
  },
  "SIMO": {
-  "error": "HTTP Error 402: Payment Required"
+  "error": "免費方案未支援"
  },
  "ASML": {
-  "error": "HTTP Error 402: Payment Required"
+  "error": "免費方案未支援"
  },
  "AMD": {
   "price": 507.29,
@@ -115,22 +115,22 @@
   "valid": 4
  },
  "QCOM": {
-  "error": "HTTP Error 402: Payment Required"
+  "error": "免費方案未支援"
  },
  "ARM": {
-  "error": "HTTP Error 402: Payment Required"
+  "error": "免費方案未支援"
  },
  "AAOI": {
-  "error": "HTTP Error 402: Payment Required"
+  "error": "免費方案未支援"
  },
  "LITE": {
-  "error": "HTTP Error 402: Payment Required"
+  "error": "免費方案未支援"
  },
  "COHR": {
-  "error": "HTTP Error 402: Payment Required"
+  "error": "免費方案未支援"
  },
  "MRVL": {
-  "error": "HTTP Error 402: Payment Required"
+  "error": "免費方案未支援"
  },
  "PLTR": {
   "price": 133.25,
@@ -177,16 +177,16 @@
   "valid": 4
  },
  "ORCL": {
-  "error": "HTTP Error 402: Payment Required"
+  "error": "免費方案未支援"
  },
  "TEAM": {
-  "error": "HTTP Error 402: Payment Required"
+  "error": "免費方案未支援"
  },
  "CRM": {
-  "error": "HTTP Error 402: Payment Required"
+  "error": "免費方案未支援"
  },
  "NET": {
-  "error": "HTTP Error 402: Payment Required"
+  "error": "免費方案未支援"
  },
  "ADBE": {
   "price": 207.32,
@@ -233,7 +233,7 @@
   "valid": 4
  },
  "CRWD": {
-  "error": "HTTP Error 402: Payment Required"
+  "error": "免費方案未支援"
  },
  "NVDA": {
   "price": 207.41,
@@ -544,7 +544,7 @@
   "valid": 4
  },
  "AVGO": {
-  "error": "HTTP Error 402: Payment Required"
+  "error": "免費方案未支援"
  },
  "TSM": {
   "price": 425.83,
@@ -591,37 +591,37 @@
   "valid": 4
  },
  "VST": {
-  "error": "HTTP Error 402: Payment Required"
+  "error": "免費方案未支援"
  },
  "GEV": {
-  "error": "HTTP Error 402: Payment Required"
+  "error": "免費方案未支援"
  },
  "CEG": {
-  "error": "HTTP Error 402: Payment Required"
+  "error": "免費方案未支援"
  },
  "SBGSY": {
-  "error": "HTTP Error 402: Payment Required"
+  "error": "免費方案未支援"
  },
  "POWL": {
-  "error": "HTTP Error 402: Payment Required"
+  "error": "免費方案未支援"
  },
  "PWR": {
-  "error": "HTTP Error 402: Payment Required"
+  "error": "免費方案未支援"
  },
  "FIX": {
-  "error": "HTTP Error 402: Payment Required"
+  "error": "免費方案未支援"
  },
  "ETN": {
-  "error": "HTTP Error 402: Payment Required"
+  "error": "免費方案未支援"
  },
  "MOD": {
-  "error": "HTTP Error 402: Payment Required"
+  "error": "免費方案未支援"
  },
  "VRT": {
-  "error": "HTTP Error 402: Payment Required"
+  "error": "免費方案未支援"
  },
  "NVT": {
-  "error": "HTTP Error 402: Payment Required"
+  "error": "免費方案未支援"
  },
  "NOK": {
   "price": 13.98,
@@ -668,19 +668,19 @@
   "valid": 4
  },
  "ERIC": {
-  "error": "HTTP Error 402: Payment Required"
+  "error": "免費方案未支援"
  },
  "ANET": {
-  "error": "HTTP Error 402: Payment Required"
+  "error": "免費方案未支援"
  },
  "NBIS": {
-  "error": "HTTP Error 402: Payment Required"
+  "error": "免費方案未支援"
  },
  "TER": {
-  "error": "HTTP Error 402: Payment Required"
+  "error": "免費方案未支援"
  },
  "LLY": {
-  "error": "HTTP Error 402: Payment Required"
+  "error": "免費方案未支援"
  },
  "UNH": {
   "price": 407.65,
@@ -726,5 +726,5 @@
   "score": 3,
   "valid": 4
  },
- "_updated": "2026-06-16T20:55:57Z"
+ "_updated": "2026-06-16T21:01:54Z"
 }
