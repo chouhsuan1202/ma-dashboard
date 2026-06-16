@@ -43,6 +43,7 @@
   .score { font-weight:700; font-variant-numeric:tabular-nums; }
   .s4{color:#047857;} .s3{color:#10b981;} .s2{color:#9ca3af;} .s1{color:#ef6b6b;} .s0{color:#b91c1c;}
   .err { color:#c0843b; font-size:11px; }
+  .nd { color:#9ca3af; font-size:12px; }
   .price { font-weight:700; font-variant-numeric:tabular-nums; }
   .loading { text-align:center; padding:40px; color:#6b7280; }
   footer { color:#9ca3af; font-size:11px; margin-top:24px; text-align:center; }
@@ -91,7 +92,7 @@ function maCell(m){
 }
 function rowHtml(it){
   const r=DATA[it.s];
-  if(!r||r.error) return `<tr><td class="name"><span class="sym">${it.s}</span> <span class="nm">${it.n}</span></td><td class="err" colspan="6">${(r&&r.error)||"無資料"}</td></tr>`;
+  if(!r||r.error) return `<tr><td class="name"><span class="sym">${it.s}</span> <span class="nm">${it.n}</span></td><td class="nd" colspan="6">${(r&&r.error)||"無資料"}</td></tr>`;
   const m=r.mas||[];
   return `<tr><td class="name"><span class="sym">${it.s}</span> <span class="nm">${it.n}</span></td>
     <td class="price">${r.price!=null?r.price.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}):"—"}</td>

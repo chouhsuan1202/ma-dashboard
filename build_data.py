@@ -76,7 +76,10 @@ for sym in SYMBOLS:
         out[sym] = build(sym)
         print(f"OK  {sym}: {out[sym]['price']} @ {out[sym]['date']}")
     except Exception as e:
-        out[sym] = {"error": str(e)}
+        msg = str(e)
+        if "402" in msg or "Payment Required" in msg or "higher plan" in msg.lower():
+            msg = "免費方案未支援"
+        out[sym] = {"error": msg}
         print(f"ERR {sym}: {e}")
     time.sleep(0.25)
 
