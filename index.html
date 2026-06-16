@@ -13,14 +13,21 @@
   .wrap { max-width:1100px; margin:0 auto; padding:16px; }
   header h1 { font-size:20px; margin:0 0 4px; }
   .sub { color:#6b7280; font-size:12px; margin-bottom:14px; }
-  .summary { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:16px; }
-  .card { background:#fff; border:1px solid #e5e7eb; border-radius:10px; padding:10px 14px; min-width:110px; }
-  .card .n { font-size:22px; font-weight:700; } .card .l { font-size:11px; color:#6b7280; }
-  .legend { font-size:12px; color:#6b7280; margin:6px 0 14px; }
-  .legend b.up{color:#047857;} .legend b.dn{color:#b91c1c;}
-  .controls { margin-bottom:12px; display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
-  .controls button { font-size:12px; padding:5px 10px; border:1px solid #d1d5db; background:#fff; border-radius:7px; cursor:pointer; }
-  .controls button.active { background:#1f2937; color:#fff; border-color:#1f2937; }
+  .sig { background:#fff; border:1px solid #e5e7eb; border-radius:12px; padding:14px 16px; margin-bottom:14px; }
+  .sig h3 { margin:0 0 10px; font-size:16px; }
+  .sigrow { display:flex; align-items:center; gap:12px; padding:7px 0; border-top:1px solid #f3f4f6; }
+  .sigrow:first-of-type { border-top:none; }
+  .sigtxt { font-size:14px; font-weight:500; }
+  .tag { font-size:13px; font-weight:800; padding:5px 12px; border-radius:8px; white-space:nowrap; flex:none; min-width:78px; text-align:center; }
+  .tag.b { background:#047857; color:#fff; } .tag.s { background:#dc2626; color:#fff; } .tag.t { background:#f59e0b; color:#fff; }
+  .none { color:#6b7280; font-size:14px; }
+  .summary { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:14px; }
+  .card { background:#fff; border:1px solid #e5e7eb; border-radius:10px; padding:9px 14px; min-width:96px; }
+  .card .n { font-size:20px; font-weight:700; } .card .l { font-size:11px; color:#6b7280; }
+  .tabs { display:flex; flex-wrap:wrap; gap:2px; border-bottom:2px solid #d1d5db; margin-bottom:14px; }
+  .tabs button { font-size:13px; padding:7px 12px; border:1px solid #d1d5db; border-bottom:none;
+    background:#eceef1; color:#374151; border-radius:7px 7px 0 0; cursor:pointer; margin-bottom:-2px; }
+  .tabs button.active { background:#fff; color:#111827; font-weight:700; border-bottom:2px solid #fff; }
   .group { margin-bottom:18px; }
   .group h2 { font-size:14px; margin:0 0 6px; padding:4px 8px; background:#eef0f3; border-radius:6px; display:inline-block; }
   table { width:100%; border-collapse:collapse; background:#fff; border:1px solid #e5e7eb; border-radius:10px; overflow:hidden; }
@@ -28,13 +35,14 @@
   th { background:#fafbfc; font-size:11px; color:#6b7280; font-weight:600; }
   td.name,th.name { text-align:left; }
   .sym { font-weight:700; } .nm { color:#6b7280; font-size:11px; }
-  .ma { font-variant-numeric:tabular-nums; } .ma .v{font-weight:600;} .ma .d{font-size:10px;display:block;}
-  .up { background:#e7f6ee; } .up .v,.up .d{color:#047857;}
-  .dn { background:#fdeaea; } .dn .v,.dn .d{color:#b91c1c;}
+  .ma { font-variant-numeric:tabular-nums; } .ma .v{font-weight:700;font-size:14px;} .ma .d{font-size:10px;display:block;color:#9ca3af;}
+  .up { background:#e7f6ee; } .up .v{color:#047857;}
+  .dn { background:#fdeaea; } .dn .v{color:#b91c1c;}
   .na { color:#b0b4bb; }
+  .x { font-weight:700; } .xb{color:#047857;} .xs{color:#b91c1c;}
   .score { font-weight:700; font-variant-numeric:tabular-nums; }
   .s4{color:#047857;} .s3{color:#10b981;} .s2{color:#9ca3af;} .s1{color:#ef6b6b;} .s0{color:#b91c1c;}
-  .err { color:#b91c1c; font-size:11px; }
+  .err { color:#c0843b; font-size:11px; }
   .price { font-weight:700; font-variant-numeric:tabular-nums; }
   .loading { text-align:center; padding:40px; color:#6b7280; }
   footer { color:#9ca3af; font-size:11px; margin-top:24px; text-align:center; }
@@ -44,102 +52,108 @@
 <div class="wrap">
   <header>
     <h1>均線多空總覽 · 美股</h1>
-    <div class="sub">收盤價對比 週線(5MA)/月線(20MA)/季線(60MA)/年線(240MA)。資料來源 Financial Modeling Prep,每日自動更新。更新時間:<span id="updated">—</span></div>
+    <div class="sub">資料來源 Financial Modeling Prep,每日自動更新 · 資料更新至 <span id="datadate">—</span></div>
   </header>
-  <div class="summary" id="summary"></div>
-  <div class="legend">
-    格子<b class="up"> 綠 </b>= 收盤<b class="up">站上</b>該均線、<b class="dn"> 紅 </b>= <b class="dn">跌破</b>。「多空」= 站上幾條線(4 = 多頭排列,0 = 空頭排列)。
-  </div>
-  <div class="controls">
-    <span style="font-size:12px;color:#6b7280;">排序:</span>
-    <button data-sort="group" class="active">依類股</button>
-    <button data-sort="strong">最強</button>
-    <button data-sort="weak">最弱</button>
-  </div>
   <div id="status" class="loading">讀取資料中…</div>
+  <div id="signals"></div>
+  <div id="summary"></div>
+  <div class="tabs" id="tabs" style="display:none"></div>
   <div id="content"></div>
   <footer>資料僅供參考,非投資建議。</footer>
 </div>
 
 <script>
 const GROUPS = [
-  { name:"記憶體 / 半導體設備", items:[
+  { name:"記憶體 / 半導體設備", key:"mem", items:[
     {s:"MU",n:"Micron"},{s:"WDC",n:"Western Digital"},{s:"STX",n:"Seagate"},{s:"SNDK",n:"SanDisk"},
     {s:"LRCX",n:"Lam Research"},{s:"AMAT",n:"Applied Materials"},{s:"KLAC",n:"KLA"},{s:"SIMO",n:"Silicon Motion"},{s:"ASML",n:"ASML"} ]},
-  { name:"CPU", items:[ {s:"AMD",n:"AMD"},{s:"INTC",n:"Intel"},{s:"QCOM",n:"Qualcomm"},{s:"ARM",n:"Arm"} ]},
-  { name:"光通訊", items:[ {s:"AAOI",n:"Applied Opto"},{s:"LITE",n:"Lumentum"},{s:"COHR",n:"Coherent"},{s:"MRVL",n:"Marvell"} ]},
-  { name:"軟體", items:[ {s:"PLTR",n:"Palantir"},{s:"ORCL",n:"Oracle"},{s:"TEAM",n:"Atlassian"},{s:"CRM",n:"Salesforce"},{s:"NET",n:"Cloudflare"},{s:"ADBE",n:"Adobe"},{s:"CRWD",n:"CrowdStrike"} ]},
-  { name:"巨頭", items:[ {s:"NVDA",n:"Nvidia"},{s:"MSFT",n:"Microsoft"},{s:"TSLA",n:"Tesla"},{s:"AAPL",n:"Apple"},{s:"GOOGL",n:"Alphabet"},{s:"AMZN",n:"Amazon"},{s:"META",n:"Meta"} ]},
-  { name:"GPU / AI 算力", items:[ {s:"NVDA",n:"Nvidia"},{s:"AMD",n:"AMD"},{s:"AVGO",n:"Broadcom"},{s:"TSM",n:"台積電 ADR"} ]},
-  { name:"能源", items:[ {s:"VST",n:"Vistra"},{s:"GEV",n:"GE Vernova"},{s:"CEG",n:"Constellation"} ]},
-  { name:"電力", items:[ {s:"SBGSY",n:"Schneider ADR"},{s:"POWL",n:"Powell"},{s:"PWR",n:"Quanta"},{s:"FIX",n:"Comfort Sys"},{s:"ETN",n:"Eaton"} ]},
-  { name:"散熱", items:[ {s:"MOD",n:"Modine"},{s:"VRT",n:"Vertiv"},{s:"NVT",n:"nVent"} ]},
-  { name:"通訊基建", items:[ {s:"NOK",n:"Nokia"},{s:"ERIC",n:"Ericsson"},{s:"ANET",n:"Arista"},{s:"NBIS",n:"Nebius"} ]},
-  { name:"測試", items:[ {s:"TER",n:"Teradyne"} ]},
-  { name:"健康", items:[ {s:"LLY",n:"Eli Lilly"},{s:"UNH",n:"UnitedHealth"} ]},
+  { name:"CPU", key:"cpu", items:[ {s:"AMD",n:"AMD"},{s:"INTC",n:"Intel"},{s:"QCOM",n:"Qualcomm"},{s:"ARM",n:"Arm"} ]},
+  { name:"光通訊", key:"opt", items:[ {s:"AAOI",n:"Applied Opto"},{s:"LITE",n:"Lumentum"},{s:"COHR",n:"Coherent"},{s:"MRVL",n:"Marvell"} ]},
+  { name:"軟體", key:"sw", items:[ {s:"PLTR",n:"Palantir"},{s:"ORCL",n:"Oracle"},{s:"TEAM",n:"Atlassian"},{s:"CRM",n:"Salesforce"},{s:"NET",n:"Cloudflare"},{s:"ADBE",n:"Adobe"},{s:"CRWD",n:"CrowdStrike"} ]},
+  { name:"巨頭", key:"big", items:[ {s:"NVDA",n:"Nvidia"},{s:"MSFT",n:"Microsoft"},{s:"TSLA",n:"Tesla"},{s:"AAPL",n:"Apple"},{s:"GOOGL",n:"Alphabet"},{s:"AMZN",n:"Amazon"},{s:"META",n:"Meta"} ]},
+  { name:"GPU / AI 算力", key:"gpu", items:[ {s:"NVDA",n:"Nvidia"},{s:"AMD",n:"AMD"},{s:"AVGO",n:"Broadcom"},{s:"TSM",n:"台積電 ADR"} ]},
+  { name:"能源", key:"egy", items:[ {s:"VST",n:"Vistra"},{s:"GEV",n:"GE Vernova"},{s:"CEG",n:"Constellation"} ]},
+  { name:"電力", key:"pwr", items:[ {s:"SBGSY",n:"Schneider ADR"},{s:"POWL",n:"Powell"},{s:"PWR",n:"Quanta"},{s:"FIX",n:"Comfort Sys"},{s:"ETN",n:"Eaton"} ]},
+  { name:"散熱", key:"cool", items:[ {s:"MOD",n:"Modine"},{s:"VRT",n:"Vertiv"},{s:"NVT",n:"nVent"} ]},
+  { name:"通訊基建", key:"net", items:[ {s:"NOK",n:"Nokia"},{s:"ERIC",n:"Ericsson"},{s:"ANET",n:"Arista"},{s:"NBIS",n:"Nebius"} ]},
+  { name:"測試", key:"test", items:[ {s:"TER",n:"Teradyne"} ]},
+  { name:"健康", key:"hlth", items:[ {s:"LLY",n:"Eli Lilly"},{s:"UNH",n:"UnitedHealth"} ]},
 ];
-const MAS = ["ma5","ma20","ma60","ma240"];
+const FOCUS = ["mem","big"];
 let DATA = {};
 
-function enrich(r){
-  if(!r || r.error) return r||{error:"無資料"};
-  const out={price:r.price,date:r.date,mas:[]};
-  MAS.forEach(k=>{
-    const v=r[k];
-    if(v==null) out.mas.push({v:null});
-    else out.mas.push({v, above:r.price>=v, diff:(r.price/v-1)*100});
-  });
-  out.valid=out.mas.filter(m=>m.v!=null).length;
-  out.score=out.mas.filter(m=>m.v!=null&&m.above).length;
-  return out;
-}
+function groupByKey(k){ return GROUPS.find(g=>g.key===k); }
 function maCell(m){
   if(!m||m.v==null) return '<td class="ma na">—</td>';
   const cls=m.above?"up":"dn", sign=m.diff>=0?"+":"";
-  return `<td class="ma ${cls}"><span class="v">${m.v.toLocaleString(undefined,{maximumFractionDigits:2})}</span><span class="d">${sign}${m.diff.toFixed(1)}%</span></td>`;
+  const badge=m.cross==="bull"?' <span class="x xb">↑</span>':m.cross==="bear"?' <span class="x xs">↓</span>':'';
+  return `<td class="ma ${cls}"><span class="v">${sign}${m.diff.toFixed(1)}%${badge}</span><span class="d">${m.v.toLocaleString(undefined,{maximumFractionDigits:2})}</span></td>`;
 }
 function rowHtml(it){
-  const r=enrich(DATA[it.s]);
+  const r=DATA[it.s];
   if(!r||r.error) return `<tr><td class="name"><span class="sym">${it.s}</span> <span class="nm">${it.n}</span></td><td class="err" colspan="6">${(r&&r.error)||"無資料"}</td></tr>`;
-  return `<tr><td class="name"><span class="sym">${it.s}</span> <span class="nm">${it.n}</span><br><span class="nm">${r.date||""}</span></td>
+  const m=r.mas||[];
+  return `<tr><td class="name"><span class="sym">${it.s}</span> <span class="nm">${it.n}</span></td>
     <td class="price">${r.price!=null?r.price.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}):"—"}</td>
-    ${maCell(r.mas[0])}${maCell(r.mas[1])}${maCell(r.mas[2])}${maCell(r.mas[3])}
+    ${maCell(m[0])}${maCell(m[1])}${maCell(m[2])}${maCell(m[3])}
     <td class="score s${r.score}">${r.score}/${r.valid}</td></tr>`;
 }
 const THEAD=`<thead><tr><th class="name">代碼 / 名稱</th><th>收盤</th><th>週線 5MA</th><th>月線 20MA</th><th>季線 60MA</th><th>年線 240MA</th><th>多空</th></tr></thead>`;
-function render(mode){
-  const el=document.getElementById("content");
-  if(mode==="group"){
-    el.innerHTML=GROUPS.map(g=>`<div class="group"><h2>${g.name}</h2><table>${THEAD}<tbody>${g.items.map(rowHtml).join("")}</tbody></table></div>`).join("");
-  } else {
-    const seen={},items=[];
-    GROUPS.forEach(g=>g.items.forEach(it=>{ if(!seen[it.s]){seen[it.s]=1;items.push(it);} }));
-    items.sort((a,b)=>{ const ra=enrich(DATA[a.s])||{},rb=enrich(DATA[b.s])||{};
-      const sa=ra.error?-1:ra.score, sb=rb.error?-1:rb.score; return mode==="strong"?(sb-sa):(sa-sb); });
-    el.innerHTML=`<div class="group"><table>${THEAD}<tbody>${items.map(rowHtml).join("")}</tbody></table></div>`;
-  }
+function tableFor(items){ return `<table>${THEAD}<tbody>${items.map(rowHtml).join("")}</tbody></table>`; }
+
+function buildSignals(){
+  const cross=[], near=[]; const seen={};
+  GROUPS.forEach(g=>g.items.forEach(it=>{ if(seen[it.s])return; seen[it.s]=1;
+    const r=DATA[it.s]; if(!r||r.error||!r.mas)return;
+    r.mas.forEach(m=>{ if(m.v==null)return;
+      if(m.cross) cross.push({sym:it.s,label:m.label,dir:m.cross});
+      else if(m.near) near.push({sym:it.s,label:m.label}); }); }));
+  return {cross,near};
 }
-function renderSummary(){
+function signalsHtml(){
+  const {cross,near}=buildSignals();
+  const bull=cross.filter(c=>c.dir==="bull"), bear=cross.filter(c=>c.dir==="bear");
+  let h=`<div class="sig"><h3>今日均線訊號</h3>`;
+  if(!bull.length&&!bear.length&&!near.length){ h+=`<div class="none">今日無均線交叉或接近訊號。</div></div>`; return h; }
+  if(bull.length) h+=`<div class="sigrow"><span class="tag b">偏多 ↑</span><span class="sigtxt">${bull.map(s=>`${s.sym} 站上${s.label}`).join("、")}</span></div>`;
+  if(bear.length) h+=`<div class="sigrow"><span class="tag s">偏空 ↓</span><span class="sigtxt">${bear.map(s=>`${s.sym} 跌破${s.label}`).join("、")}</span></div>`;
+  if(near.length) h+=`<div class="sigrow"><span class="tag t">接近</span><span class="sigtxt">${near.map(s=>`${s.sym}(${s.label})`).join("、")}</span></div>`;
+  h+=`</div>`; return h;
+}
+function summaryHtml(){
   let total=0,strong=0,weak=0,errc=0; const seen={};
   GROUPS.forEach(g=>g.items.forEach(it=>{ if(seen[it.s])return; seen[it.s]=1;
-    const r=enrich(DATA[it.s]); total++;
-    if(!r||r.error){errc++;return;}
+    const r=DATA[it.s]; total++; if(!r||r.error){errc++;return;}
     if(r.valid>0&&r.score===r.valid)strong++; if(r.score===0)weak++; }));
-  document.getElementById("summary").innerHTML=`
-    <div class="card"><div class="n">${total}</div><div class="l">追蹤檔數</div></div>
-    <div class="card"><div class="n" style="color:#047857">${strong}</div><div class="l">多頭排列(站上全部)</div></div>
-    <div class="card"><div class="n" style="color:#b91c1c">${weak}</div><div class="l">空頭排列(全數跌破)</div></div>
-    <div class="card"><div class="n" style="color:#6b7280">${errc}</div><div class="l">無資料</div></div>`;
+  return `<div class="summary">
+    <div class="card"><div class="n">${total}</div><div class="l">追蹤股數</div></div>
+    <div class="card"><div class="n" style="color:#047857">${strong}</div><div class="l">多頭排列</div></div>
+    <div class="card"><div class="n" style="color:#b91c1c">${weak}</div><div class="l">空頭排列</div></div>
+    <div class="card"><div class="n" style="color:#6b7280">${errc}</div><div class="l">無資料</div></div></div>`;
 }
-document.querySelectorAll(".controls button").forEach(b=>b.addEventListener("click",()=>{
-  document.querySelectorAll(".controls button").forEach(x=>x.classList.remove("active"));
-  b.classList.add("active"); render(b.dataset.sort);
-}));
+
+let currentTab="focus";
+const TABS=[{key:"focus",name:"重點"}].concat(GROUPS.map(g=>({key:g.key,name:g.name.split(" ")[0].replace("/","")})));
+function buildTabs(){
+  document.getElementById("tabs").innerHTML=TABS.map(t=>`<button data-k="${t.key}" class="${t.key===currentTab?'active':''}">${t.name}</button>`).join("");
+  document.querySelectorAll("#tabs button").forEach(b=>b.addEventListener("click",()=>{currentTab=b.dataset.k; buildTabs(); renderTab(currentTab);}));
+}
+function renderTab(k){
+  const el=document.getElementById("content");
+  if(k==="focus"){
+    el.innerHTML=FOCUS.map(fk=>{ const g=groupByKey(fk); return `<div class="group"><h2>${g.name}</h2>${tableFor(g.items)}</div>`; }).join("");
+  } else { const g=groupByKey(k); el.innerHTML=`<div class="group"><h2>${g.name}</h2>${tableFor(g.items)}</div>`; }
+}
+
 fetch("data.json?t="+Date.now()).then(r=>r.json()).then(d=>{
-  DATA=d; document.getElementById("updated").textContent=(d._updated||"").replace("T"," ").replace("Z"," UTC");
+  DATA=d;
+  document.getElementById("datadate").textContent=(d._updated||"").slice(0,10)||"—";
   document.getElementById("status").style.display="none";
-  renderSummary(); render("group");
-}).catch(e=>{ document.getElementById("status").innerHTML='<span class="err">尚無資料,等待首次自動更新完成(或 data.json 載入失敗)。</span>'; });
+  document.getElementById("signals").innerHTML=signalsHtml();
+  document.getElementById("summary").innerHTML=summaryHtml();
+  document.getElementById("tabs").style.display="flex";
+  buildTabs(); renderTab(currentTab);
+}).catch(e=>{ document.getElementById("status").innerHTML='<span class="err">尚無資料,等待首次自動更新完成。</span>'; });
 </script>
 </body>
 </html>
