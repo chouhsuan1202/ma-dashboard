@@ -1,3 +1,730 @@
 {
- "_updated": "尚未更新,等待第一次 GitHub Actions 執行"
+ "MU": {
+  "error": "HTTP Error 402: Payment Required"
+ },
+ "WDC": {
+  "error": "HTTP Error 402: Payment Required"
+ },
+ "STX": {
+  "error": "HTTP Error 402: Payment Required"
+ },
+ "SNDK": {
+  "error": "HTTP Error 402: Payment Required"
+ },
+ "LRCX": {
+  "error": "HTTP Error 402: Payment Required"
+ },
+ "AMAT": {
+  "error": "HTTP Error 402: Payment Required"
+ },
+ "KLAC": {
+  "error": "HTTP Error 402: Payment Required"
+ },
+ "SIMO": {
+  "error": "HTTP Error 402: Payment Required"
+ },
+ "ASML": {
+  "error": "HTTP Error 402: Payment Required"
+ },
+ "AMD": {
+  "price": 507.29,
+  "date": "2026-06-16",
+  "mas": [
+   {
+    "k": 5,
+    "label": "週線",
+    "v": 501.394,
+    "above": true,
+    "diff": 1.18,
+    "cross": null,
+    "near": true
+   },
+   {
+    "k": 20,
+    "label": "月線",
+    "v": 492.4465,
+    "above": true,
+    "diff": 3.01,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 60,
+    "label": "季線",
+    "v": 367.2883,
+    "above": true,
+    "diff": 38.12,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 240,
+    "label": "年線",
+    "v": 241.9005,
+    "above": true,
+    "diff": 109.71,
+    "cross": null,
+    "near": false
+   }
+  ],
+  "score": 4,
+  "valid": 4
+ },
+ "INTC": {
+  "price": 117.05,
+  "date": "2026-06-16",
+  "mas": [
+   {
+    "k": 5,
+    "label": "週線",
+    "v": 118.696,
+    "above": false,
+    "diff": -1.39,
+    "cross": "bear",
+    "near": true
+   },
+   {
+    "k": 20,
+    "label": "月線",
+    "v": 115.0775,
+    "above": true,
+    "diff": 1.71,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 60,
+    "label": "季線",
+    "v": 89.7505,
+    "above": true,
+    "diff": 30.42,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 240,
+    "label": "年線",
+    "v": 49.1487,
+    "above": true,
+    "diff": 138.15,
+    "cross": null,
+    "near": false
+   }
+  ],
+  "score": 3,
+  "valid": 4
+ },
+ "QCOM": {
+  "error": "HTTP Error 402: Payment Required"
+ },
+ "ARM": {
+  "error": "HTTP Error 402: Payment Required"
+ },
+ "AAOI": {
+  "error": "HTTP Error 402: Payment Required"
+ },
+ "LITE": {
+  "error": "HTTP Error 402: Payment Required"
+ },
+ "COHR": {
+  "error": "HTTP Error 402: Payment Required"
+ },
+ "MRVL": {
+  "error": "HTTP Error 402: Payment Required"
+ },
+ "PLTR": {
+  "price": 133.25,
+  "date": "2026-06-16",
+  "mas": [
+   {
+    "k": 5,
+    "label": "週線",
+    "v": 131.448,
+    "above": true,
+    "diff": 1.37,
+    "cross": null,
+    "near": true
+   },
+   {
+    "k": 20,
+    "label": "月線",
+    "v": 138.6865,
+    "above": false,
+    "diff": -3.92,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 60,
+    "label": "季線",
+    "v": 140.689,
+    "above": false,
+    "diff": -5.29,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 240,
+    "label": "年線",
+    "v": 160.078,
+    "above": false,
+    "diff": -16.76,
+    "cross": null,
+    "near": false
+   }
+  ],
+  "score": 1,
+  "valid": 4
+ },
+ "ORCL": {
+  "error": "HTTP Error 402: Payment Required"
+ },
+ "TEAM": {
+  "error": "HTTP Error 402: Payment Required"
+ },
+ "CRM": {
+  "error": "HTTP Error 402: Payment Required"
+ },
+ "NET": {
+  "error": "HTTP Error 402: Payment Required"
+ },
+ "ADBE": {
+  "price": 207.32,
+  "date": "2026-06-16",
+  "mas": [
+   {
+    "k": 5,
+    "label": "週線",
+    "v": 213.976,
+    "above": false,
+    "diff": -3.11,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 20,
+    "label": "月線",
+    "v": 241.5795,
+    "above": false,
+    "diff": -14.18,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 60,
+    "label": "季線",
+    "v": 243.0572,
+    "above": false,
+    "diff": -14.7,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 240,
+    "label": "年線",
+    "v": 307.3015,
+    "above": false,
+    "diff": -32.54,
+    "cross": null,
+    "near": false
+   }
+  ],
+  "score": 0,
+  "valid": 4
+ },
+ "CRWD": {
+  "error": "HTTP Error 402: Payment Required"
+ },
+ "NVDA": {
+  "price": 207.41,
+  "date": "2026-06-16",
+  "mas": [
+   {
+    "k": 5,
+    "label": "週線",
+    "v": 206.068,
+    "above": true,
+    "diff": 0.65,
+    "cross": null,
+    "near": true
+   },
+   {
+    "k": 20,
+    "label": "月線",
+    "v": 213.2315,
+    "above": false,
+    "diff": -2.73,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 60,
+    "label": "季線",
+    "v": 202.484,
+    "above": true,
+    "diff": 2.43,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 240,
+    "label": "年線",
+    "v": 187.0435,
+    "above": true,
+    "diff": 10.89,
+    "cross": null,
+    "near": false
+   }
+  ],
+  "score": 3,
+  "valid": 4
+ },
+ "MSFT": {
+  "price": 393.83,
+  "date": "2026-06-16",
+  "mas": [
+   {
+    "k": 5,
+    "label": "週線",
+    "v": 394.406,
+    "above": false,
+    "diff": -0.15,
+    "cross": "bear",
+    "near": true
+   },
+   {
+    "k": 20,
+    "label": "月線",
+    "v": 417.157,
+    "above": false,
+    "diff": -5.59,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 60,
+    "label": "季線",
+    "v": 405.5243,
+    "above": false,
+    "diff": -2.88,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 240,
+    "label": "年線",
+    "v": 462.5625,
+    "above": false,
+    "diff": -14.86,
+    "cross": null,
+    "near": false
+   }
+  ],
+  "score": 0,
+  "valid": 4
+ },
+ "TSLA": {
+  "price": 404.66,
+  "date": "2026-06-16",
+  "mas": [
+   {
+    "k": 5,
+    "label": "週線",
+    "v": 400.596,
+    "above": true,
+    "diff": 1.01,
+    "cross": null,
+    "near": true
+   },
+   {
+    "k": 20,
+    "label": "月線",
+    "v": 414.9225,
+    "above": false,
+    "diff": -2.47,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 60,
+    "label": "季線",
+    "v": 395.3812,
+    "above": true,
+    "diff": 2.35,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 240,
+    "label": "年線",
+    "v": 400.8028,
+    "above": true,
+    "diff": 0.96,
+    "cross": null,
+    "near": true
+   }
+  ],
+  "score": 3,
+  "valid": 4
+ },
+ "AAPL": {
+  "price": 299.24,
+  "date": "2026-06-16",
+  "mas": [
+   {
+    "k": 5,
+    "label": "週線",
+    "v": 294.8,
+    "above": true,
+    "diff": 1.51,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 20,
+    "label": "月線",
+    "v": 303.7605,
+    "above": false,
+    "diff": -1.49,
+    "cross": null,
+    "near": true
+   },
+   {
+    "k": 60,
+    "label": "季線",
+    "v": 281.396,
+    "above": true,
+    "diff": 6.34,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 240,
+    "label": "年線",
+    "v": 259.2498,
+    "above": true,
+    "diff": 15.43,
+    "cross": null,
+    "near": false
+   }
+  ],
+  "score": 3,
+  "valid": 4
+ },
+ "GOOGL": {
+  "price": 373.25,
+  "date": "2026-06-16",
+  "mas": [
+   {
+    "k": 5,
+    "label": "週線",
+    "v": 363.286,
+    "above": true,
+    "diff": 2.74,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 20,
+    "label": "月線",
+    "v": 373.8655,
+    "above": false,
+    "diff": -0.16,
+    "cross": null,
+    "near": true
+   },
+   {
+    "k": 60,
+    "label": "季線",
+    "v": 352.5423,
+    "above": true,
+    "diff": 5.87,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 240,
+    "label": "年線",
+    "v": 290.2393,
+    "above": true,
+    "diff": 28.6,
+    "cross": null,
+    "near": false
+   }
+  ],
+  "score": 3,
+  "valid": 4
+ },
+ "AMZN": {
+  "price": 246.0,
+  "date": "2026-06-16",
+  "mas": [
+   {
+    "k": 5,
+    "label": "週線",
+    "v": 242.016,
+    "above": true,
+    "diff": 1.65,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 20,
+    "label": "月線",
+    "v": 255.401,
+    "above": false,
+    "diff": -3.68,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 60,
+    "label": "季線",
+    "v": 248.1077,
+    "above": false,
+    "diff": -0.85,
+    "cross": null,
+    "near": true
+   },
+   {
+    "k": 240,
+    "label": "年線",
+    "v": 231.5017,
+    "above": true,
+    "diff": 6.26,
+    "cross": null,
+    "near": false
+   }
+  ],
+  "score": 2,
+  "valid": 4
+ },
+ "META": {
+  "price": 600.21,
+  "date": "2026-06-16",
+  "mas": [
+   {
+    "k": 5,
+    "label": "週線",
+    "v": 580.016,
+    "above": true,
+    "diff": 3.48,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 20,
+    "label": "月線",
+    "v": 602.621,
+    "above": false,
+    "diff": -0.4,
+    "cross": null,
+    "near": true
+   },
+   {
+    "k": 60,
+    "label": "季線",
+    "v": 613.9658,
+    "above": false,
+    "diff": -2.24,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 240,
+    "label": "年線",
+    "v": 670.3976,
+    "above": false,
+    "diff": -10.47,
+    "cross": null,
+    "near": false
+   }
+  ],
+  "score": 1,
+  "valid": 4
+ },
+ "AVGO": {
+  "error": "HTTP Error 402: Payment Required"
+ },
+ "TSM": {
+  "price": 425.83,
+  "date": "2026-06-16",
+  "mas": [
+   {
+    "k": 5,
+    "label": "週線",
+    "v": 424.196,
+    "above": true,
+    "diff": 0.39,
+    "cross": null,
+    "near": true
+   },
+   {
+    "k": 20,
+    "label": "月線",
+    "v": 421.953,
+    "above": true,
+    "diff": 0.92,
+    "cross": null,
+    "near": true
+   },
+   {
+    "k": 60,
+    "label": "季線",
+    "v": 390.9428,
+    "above": true,
+    "diff": 8.92,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 240,
+    "label": "年線",
+    "v": 317.0107,
+    "above": true,
+    "diff": 34.33,
+    "cross": null,
+    "near": false
+   }
+  ],
+  "score": 4,
+  "valid": 4
+ },
+ "VST": {
+  "error": "HTTP Error 402: Payment Required"
+ },
+ "GEV": {
+  "error": "HTTP Error 402: Payment Required"
+ },
+ "CEG": {
+  "error": "HTTP Error 402: Payment Required"
+ },
+ "SBGSY": {
+  "error": "HTTP Error 402: Payment Required"
+ },
+ "POWL": {
+  "error": "HTTP Error 402: Payment Required"
+ },
+ "PWR": {
+  "error": "HTTP Error 402: Payment Required"
+ },
+ "FIX": {
+  "error": "HTTP Error 402: Payment Required"
+ },
+ "ETN": {
+  "error": "HTTP Error 402: Payment Required"
+ },
+ "MOD": {
+  "error": "HTTP Error 402: Payment Required"
+ },
+ "VRT": {
+  "error": "HTTP Error 402: Payment Required"
+ },
+ "NVT": {
+  "error": "HTTP Error 402: Payment Required"
+ },
+ "NOK": {
+  "price": 13.98,
+  "date": "2026-06-16",
+  "mas": [
+   {
+    "k": 5,
+    "label": "週線",
+    "v": 14.218,
+    "above": false,
+    "diff": -1.67,
+    "cross": "bear",
+    "near": false
+   },
+   {
+    "k": 20,
+    "label": "月線",
+    "v": 14.978,
+    "above": false,
+    "diff": -6.66,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 60,
+    "label": "季線",
+    "v": 12.2063,
+    "above": true,
+    "diff": 14.53,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 240,
+    "label": "年線",
+    "v": 7.4952,
+    "above": true,
+    "diff": 86.52,
+    "cross": null,
+    "near": false
+   }
+  ],
+  "score": 2,
+  "valid": 4
+ },
+ "ERIC": {
+  "error": "HTTP Error 402: Payment Required"
+ },
+ "ANET": {
+  "error": "HTTP Error 402: Payment Required"
+ },
+ "NBIS": {
+  "error": "HTTP Error 402: Payment Required"
+ },
+ "TER": {
+  "error": "HTTP Error 402: Payment Required"
+ },
+ "LLY": {
+  "error": "HTTP Error 402: Payment Required"
+ },
+ "UNH": {
+  "price": 407.65,
+  "date": "2026-06-16",
+  "mas": [
+   {
+    "k": 5,
+    "label": "週線",
+    "v": 408.044,
+    "above": false,
+    "diff": -0.1,
+    "cross": "bear",
+    "near": true
+   },
+   {
+    "k": 20,
+    "label": "月線",
+    "v": 392.8855,
+    "above": true,
+    "diff": 3.76,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 60,
+    "label": "季線",
+    "v": 352.5185,
+    "above": true,
+    "diff": 15.64,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 240,
+    "label": "年線",
+    "v": 324.4031,
+    "above": true,
+    "diff": 25.66,
+    "cross": null,
+    "near": false
+   }
+  ],
+  "score": 3,
+  "valid": 4
+ },
+ "_updated": "2026-06-16T20:55:57Z"
 }
