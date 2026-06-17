@@ -412,183 +412,19 @@
   "valid": 4
  },
  "GOOGL": {
-  "price": 373.25,
-  "date": "2026-06-16",
-  "mas": [
-   {
-    "k": 5,
-    "label": "週線",
-    "v": 363.286,
-    "above": true,
-    "diff": 2.74,
-    "cross": null,
-    "near": false
-   },
-   {
-    "k": 20,
-    "label": "月線",
-    "v": 373.8655,
-    "above": false,
-    "diff": -0.16,
-    "cross": null,
-    "near": true
-   },
-   {
-    "k": 60,
-    "label": "季線",
-    "v": 352.5423,
-    "above": true,
-    "diff": 5.87,
-    "cross": null,
-    "near": false
-   },
-   {
-    "k": 240,
-    "label": "年線",
-    "v": 290.2393,
-    "above": true,
-    "diff": 28.6,
-    "cross": null,
-    "near": false
-   }
-  ],
-  "score": 3,
-  "valid": 4
+  "error": "HTTP Error 429: Too Many Requests"
  },
  "AMZN": {
-  "price": 246.0,
-  "date": "2026-06-16",
-  "mas": [
-   {
-    "k": 5,
-    "label": "週線",
-    "v": 242.016,
-    "above": true,
-    "diff": 1.65,
-    "cross": null,
-    "near": false
-   },
-   {
-    "k": 20,
-    "label": "月線",
-    "v": 255.401,
-    "above": false,
-    "diff": -3.68,
-    "cross": null,
-    "near": false
-   },
-   {
-    "k": 60,
-    "label": "季線",
-    "v": 248.1077,
-    "above": false,
-    "diff": -0.85,
-    "cross": null,
-    "near": true
-   },
-   {
-    "k": 240,
-    "label": "年線",
-    "v": 231.5017,
-    "above": true,
-    "diff": 6.26,
-    "cross": null,
-    "near": false
-   }
-  ],
-  "score": 2,
-  "valid": 4
+  "error": "HTTP Error 429: Too Many Requests"
  },
  "META": {
-  "price": 600.21,
-  "date": "2026-06-16",
-  "mas": [
-   {
-    "k": 5,
-    "label": "週線",
-    "v": 580.016,
-    "above": true,
-    "diff": 3.48,
-    "cross": null,
-    "near": false
-   },
-   {
-    "k": 20,
-    "label": "月線",
-    "v": 602.621,
-    "above": false,
-    "diff": -0.4,
-    "cross": null,
-    "near": true
-   },
-   {
-    "k": 60,
-    "label": "季線",
-    "v": 613.9658,
-    "above": false,
-    "diff": -2.24,
-    "cross": null,
-    "near": false
-   },
-   {
-    "k": 240,
-    "label": "年線",
-    "v": 670.3976,
-    "above": false,
-    "diff": -10.47,
-    "cross": null,
-    "near": false
-   }
-  ],
-  "score": 1,
-  "valid": 4
+  "error": "HTTP Error 429: Too Many Requests"
  },
  "AVGO": {
-  "error": "免費方案未支援"
+  "error": "HTTP Error 429: Too Many Requests"
  },
  "TSM": {
-  "price": 425.83,
-  "date": "2026-06-16",
-  "mas": [
-   {
-    "k": 5,
-    "label": "週線",
-    "v": 424.196,
-    "above": true,
-    "diff": 0.39,
-    "cross": null,
-    "near": true
-   },
-   {
-    "k": 20,
-    "label": "月線",
-    "v": 421.953,
-    "above": true,
-    "diff": 0.92,
-    "cross": null,
-    "near": true
-   },
-   {
-    "k": 60,
-    "label": "季線",
-    "v": 390.9428,
-    "above": true,
-    "diff": 8.92,
-    "cross": null,
-    "near": false
-   },
-   {
-    "k": 240,
-    "label": "年線",
-    "v": 317.0107,
-    "above": true,
-    "diff": 34.33,
-    "cross": null,
-    "near": false
-   }
-  ],
-  "score": 4,
-  "valid": 4
+  "error": "HTTP Error 429: Too Many Requests"
  },
- "_updated": "2026-06-17T07:29:14Z"
+ "_updated": "2026-06-17T08:49:40Z"
 }
