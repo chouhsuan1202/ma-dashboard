@@ -51,6 +51,8 @@
   .s4{color:#047857;} .s3{color:#10b981;} .s2{color:#9ca3af;} .s1{color:#ef6b6b;} .s0{color:#b91c1c;}
   .err,.nd { color:#9ca3af; font-size:12px; }
   .price { font-weight:700; font-variant-numeric:tabular-nums; }
+  tr.hasnote td { border-bottom:none; }
+  .noterow td { text-align:left; color:#6b7280; font-size:11px; padding:1px 8px 9px; }
   .loading { text-align:center; padding:40px; color:#6b7280; }
   footer { color:#9ca3af; font-size:11px; margin-top:24px; text-align:center; }
 </style>
@@ -105,14 +107,29 @@ function maCell(m){
   const badge=m.cross==="bull"?' <span class="x xb">↑</span>':m.cross==="bear"?' <span class="x xs">↓</span>':'';
   return `<td class="ma ${cls}"><span class="v">${sign}${m.diff.toFixed(1)}%${badge}</span><span class="d">${m.v.toLocaleString(undefined,{maximumFractionDigits:2})}</span></td>`;
 }
+function interpret(r){
+  const m=r.mas; if(!m||r.valid===0) return "";
+  const a=k=>{ const x=m.find(o=>o.k===k); return x&&x.v!=null?x.above:null; };
+  const a5=a(5),a20=a(20),a60=a(60),a240=a(240);
+  if([a5,a20,a60,a240].every(x=>x===true)) return "站上所有均線,多頭排列、趨勢最強。";
+  if([a5,a20,a60,a240].every(x=>x===false)) return "跌破所有均線,空頭排列、趨勢最弱。";
+  if(a240===true) return a60===true ? "中長期多頭(站上季線),短線拉回整理中。" : "在年線之上、但未站上季線,屬整理格局。";
+  if(a240===false){
+    if(a60===true) return "長期仍在年線下,但已站回季線,屬反彈。";
+    if(a20===true||a5===true) return "年線、季線之下,僅短線反彈。";
+    return "中長期偏空,留意下檔風險。";
+  }
+  return "上市時間較短、年線未成形,僅供短中期參考。";
+}
 function rowHtml(it){
   const r=DATA[it.s]; const del=editMode?` <span class="del" onclick="removeSymbol('${it.s}')">✕</span>`:"";
   if(!r||r.error) return `<tr><td class="name"><span class="sym">${it.s}</span> <span class="nm">${it.n}</span>${del}</td><td class="nd" colspan="6">${(r&&r.error)||"無資料"}</td></tr>`;
-  const m=r.mas||[];
-  return `<tr><td class="name"><span class="sym">${it.s}</span> <span class="nm">${it.n}</span>${del}</td>
+  const m=r.mas||[]; const note=interpret(r);
+  const main=`<tr class="${note?'hasnote':''}"><td class="name"><span class="sym">${it.s}</span> <span class="nm">${it.n}</span>${del}</td>
     <td class="price">${r.price!=null?r.price.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}):"—"}</td>
     ${maCell(m[0])}${maCell(m[1])}${maCell(m[2])}${maCell(m[3])}
     <td class="score s${r.score}">${r.score}/${r.valid}</td></tr>`;
+  return main + (note?`<tr class="noterow"><td colspan="7" class="note">↳ ${note}</td></tr>`:"");
 }
 const THEAD=`<thead><tr><th class="name">代碼 / 名稱</th><th>收盤</th><th>週線 5MA</th><th>月線 20MA</th><th>季線 60MA</th><th>年線 240MA</th><th>多空</th></tr></thead>`;
 function tableFor(items){ return `<table>${THEAD}<tbody>${items.map(rowHtml).join("")}</tbody></table>`; }
