@@ -14,11 +14,6 @@ SYMBOLS = [
     "PLTR","ORCL","TEAM","CRM","NET","ADBE","CRWD",
     "NVDA","MSFT","TSLA","AAPL","GOOGL","AMZN","META",
     "AVGO","TSM",
-    "VST","GEV","CEG",
-    "SBGSY","POWL","PWR","FIX","ETN",
-    "MOD","VRT","NVT",
-    "NOK","ERIC","ANET","NBIS",
-    "TER","LLY","UNH",
 ]
 MA_DEFS = [(5, "週線"), (20, "月線"), (60, "季線"), (240, "年線")]
 NEAR_PCT = 1.5

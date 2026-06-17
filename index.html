@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>均線多空總覽(美股)</title>
+<title>MA dashboard</title>
 <style>
   :root { color-scheme: light; }
   * { box-sizing: border-box; }
@@ -24,6 +24,13 @@
   .summary { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:14px; }
   .card { background:#fff; border:1px solid #e5e7eb; border-radius:10px; padding:9px 14px; min-width:96px; }
   .card .n { font-size:20px; font-weight:700; } .card .l { font-size:11px; color:#6b7280; }
+  .mng { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px; align-items:center; }
+  .mng input { font-size:13px; padding:6px 8px; border:1px solid #d1d5db; border-radius:7px; background:#fff; width:170px; }
+  .addbtn { background:#1f2937; color:#fff; border:none; border-radius:7px; padding:7px 12px; font-size:13px; cursor:pointer; }
+  .editbtn { background:#fff; color:#374151; border:1px solid #d1d5db; border-radius:7px; padding:7px 12px; font-size:13px; cursor:pointer; }
+  .editbtn.on { background:#fee2e2; border-color:#fca5a5; color:#b91c1c; }
+  .del { color:#b91c1c; cursor:pointer; font-weight:700; margin-left:8px; }
+  .mnghint { font-size:11px; color:#9ca3af; }
   .tabs { display:flex; flex-wrap:wrap; gap:2px; border-bottom:2px solid #d1d5db; margin-bottom:14px; }
   .tabs button { font-size:13px; padding:7px 12px; border:1px solid #d1d5db; border-bottom:none;
     background:#eceef1; color:#374151; border-radius:7px 7px 0 0; cursor:pointer; margin-bottom:-2px; }
@@ -42,8 +49,7 @@
   .x { font-weight:700; } .xb{color:#047857;} .xs{color:#b91c1c;}
   .score { font-weight:700; font-variant-numeric:tabular-nums; }
   .s4{color:#047857;} .s3{color:#10b981;} .s2{color:#9ca3af;} .s1{color:#ef6b6b;} .s0{color:#b91c1c;}
-  .err { color:#c0843b; font-size:11px; }
-  .nd { color:#9ca3af; font-size:12px; }
+  .err,.nd { color:#9ca3af; font-size:12px; }
   .price { font-weight:700; font-variant-numeric:tabular-nums; }
   .loading { text-align:center; padding:40px; color:#6b7280; }
   footer { color:#9ca3af; font-size:11px; margin-top:24px; text-align:center; }
@@ -52,19 +58,20 @@
 <body>
 <div class="wrap">
   <header>
-    <h1>均線多空總覽 · 美股</h1>
-    <div class="sub">資料來源 Financial Modeling Prep,每日自動更新 · 資料更新至 <span id="datadate">—</span></div>
+    <h1>MA dashboard</h1>
+    <div class="sub">美股 · 資料來源 Financial Modeling Prep,每日自動更新 · 資料更新至 <span id="datadate">—</span></div>
   </header>
   <div id="status" class="loading">讀取資料中…</div>
   <div id="signals"></div>
   <div id="summary"></div>
+  <div id="manage"></div>
   <div class="tabs" id="tabs" style="display:none"></div>
   <div id="content"></div>
   <footer>資料僅供參考,非投資建議。</footer>
 </div>
 
 <script>
-const GROUPS = [
+const BASE_GROUPS = [
   { name:"記憶體 / 半導體設備", key:"mem", items:[
     {s:"MU",n:"Micron"},{s:"WDC",n:"Western Digital"},{s:"STX",n:"Seagate"},{s:"SNDK",n:"SanDisk"},
     {s:"LRCX",n:"Lam Research"},{s:"AMAT",n:"Applied Materials"},{s:"KLAC",n:"KLA"},{s:"SIMO",n:"Silicon Motion"},{s:"ASML",n:"ASML"} ]},
@@ -73,17 +80,25 @@ const GROUPS = [
   { name:"軟體", key:"sw", items:[ {s:"PLTR",n:"Palantir"},{s:"ORCL",n:"Oracle"},{s:"TEAM",n:"Atlassian"},{s:"CRM",n:"Salesforce"},{s:"NET",n:"Cloudflare"},{s:"ADBE",n:"Adobe"},{s:"CRWD",n:"CrowdStrike"} ]},
   { name:"巨頭", key:"big", items:[ {s:"NVDA",n:"Nvidia"},{s:"MSFT",n:"Microsoft"},{s:"TSLA",n:"Tesla"},{s:"AAPL",n:"Apple"},{s:"GOOGL",n:"Alphabet"},{s:"AMZN",n:"Amazon"},{s:"META",n:"Meta"} ]},
   { name:"GPU / AI 算力", key:"gpu", items:[ {s:"NVDA",n:"Nvidia"},{s:"AMD",n:"AMD"},{s:"AVGO",n:"Broadcom"},{s:"TSM",n:"台積電 ADR"} ]},
-  { name:"能源", key:"egy", items:[ {s:"VST",n:"Vistra"},{s:"GEV",n:"GE Vernova"},{s:"CEG",n:"Constellation"} ]},
-  { name:"電力", key:"pwr", items:[ {s:"SBGSY",n:"Schneider ADR"},{s:"POWL",n:"Powell"},{s:"PWR",n:"Quanta"},{s:"FIX",n:"Comfort Sys"},{s:"ETN",n:"Eaton"} ]},
-  { name:"散熱", key:"cool", items:[ {s:"MOD",n:"Modine"},{s:"VRT",n:"Vertiv"},{s:"NVT",n:"nVent"} ]},
-  { name:"通訊基建", key:"net", items:[ {s:"NOK",n:"Nokia"},{s:"ERIC",n:"Ericsson"},{s:"ANET",n:"Arista"},{s:"NBIS",n:"Nebius"} ]},
-  { name:"測試", key:"test", items:[ {s:"TER",n:"Teradyne"} ]},
-  { name:"健康", key:"hlth", items:[ {s:"LLY",n:"Eli Lilly"},{s:"UNH",n:"UnitedHealth"} ]},
 ];
 const FOCUS = ["mem","big"];
-let DATA = {};
+const WL_KEY="ma_pub_wl_v1";
+let wl={removed:[],custom:[]}; try{wl=Object.assign(wl,JSON.parse(localStorage.getItem(WL_KEY)||"{}"));}catch(e){}
+let removed=new Set(wl.removed||[]); let custom=wl.custom||[];
+function saveWL(){try{localStorage.setItem(WL_KEY,JSON.stringify({removed:[...removed],custom}));}catch(e){}}
+let DATA={};
 
+function buildGroups(){
+  const groups=BASE_GROUPS.map(g=>({name:g.name,key:g.key,items:g.items.filter(it=>!removed.has(it.s))}));
+  custom.forEach(c=>{ if(removed.has(c.s))return;
+    let g=groups.find(x=>x.key===c.cat); if(!g){ g=groups.find(x=>x.key==="custom"); if(!g){g={name:"自訂",key:"custom",items:[]};groups.push(g);} }
+    if(!g.items.some(it=>it.s===c.s)) g.items.push({s:c.s,n:c.n||c.s});
+  });
+  return groups.filter(g=>g.items.length);
+}
+let GROUPS=buildGroups();
 function groupByKey(k){ return GROUPS.find(g=>g.key===k); }
+
 function maCell(m){
   if(!m||m.v==null) return '<td class="ma na">—</td>';
   const cls=m.above?"up":"dn", sign=m.diff>=0?"+":"";
@@ -91,10 +106,10 @@ function maCell(m){
   return `<td class="ma ${cls}"><span class="v">${sign}${m.diff.toFixed(1)}%${badge}</span><span class="d">${m.v.toLocaleString(undefined,{maximumFractionDigits:2})}</span></td>`;
 }
 function rowHtml(it){
-  const r=DATA[it.s];
-  if(!r||r.error) return `<tr><td class="name"><span class="sym">${it.s}</span> <span class="nm">${it.n}</span></td><td class="nd" colspan="6">${(r&&r.error)||"無資料"}</td></tr>`;
+  const r=DATA[it.s]; const del=editMode?` <span class="del" onclick="removeSymbol('${it.s}')">✕</span>`:"";
+  if(!r||r.error) return `<tr><td class="name"><span class="sym">${it.s}</span> <span class="nm">${it.n}</span>${del}</td><td class="nd" colspan="6">${(r&&r.error)||"無資料"}</td></tr>`;
   const m=r.mas||[];
-  return `<tr><td class="name"><span class="sym">${it.s}</span> <span class="nm">${it.n}</span></td>
+  return `<tr><td class="name"><span class="sym">${it.s}</span> <span class="nm">${it.n}</span>${del}</td>
     <td class="price">${r.price!=null?r.price.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}):"—"}</td>
     ${maCell(m[0])}${maCell(m[1])}${maCell(m[2])}${maCell(m[3])}
     <td class="score s${r.score}">${r.score}/${r.valid}</td></tr>`;
@@ -106,9 +121,7 @@ function buildSignals(){
   const cross=[], near=[]; const seen={};
   GROUPS.forEach(g=>g.items.forEach(it=>{ if(seen[it.s])return; seen[it.s]=1;
     const r=DATA[it.s]; if(!r||r.error||!r.mas)return;
-    r.mas.forEach(m=>{ if(m.v==null)return;
-      if(m.cross) cross.push({sym:it.s,label:m.label,dir:m.cross});
-      else if(m.near) near.push({sym:it.s,label:m.label}); }); }));
+    r.mas.forEach(m=>{ if(m.v==null)return; if(m.cross) cross.push({sym:it.s,label:m.label,dir:m.cross}); else if(m.near) near.push({sym:it.s,label:m.label}); }); }));
   return {cross,near};
 }
 function signalsHtml(){
@@ -130,31 +143,60 @@ function summaryHtml(){
     <div class="card"><div class="n">${total}</div><div class="l">追蹤股數</div></div>
     <div class="card"><div class="n" style="color:#047857">${strong}</div><div class="l">多頭排列</div></div>
     <div class="card"><div class="n" style="color:#b91c1c">${weak}</div><div class="l">空頭排列</div></div>
-    <div class="card"><div class="n" style="color:#6b7280">${errc}</div><div class="l">無資料</div></div></div>`;
+    <div class="card"><div class="n" style="color:#6b7280">${errc}</div><div class="l">無資料</div></div>
+    <button class="editbtn${editMode?' on':''}" style="margin-left:auto;align-self:center" onclick="toggleEdit()">${editMode?'完成':'編輯'}</button>
+  </div>`;
 }
+function currentTabName(){ if(currentTab==="focus")return "重點"; const g=groupByKey(currentTab); return g?g.name.split(" ")[0]:currentTab; }
+
+let editMode=false;
+function buildManage(){
+  const el=document.getElementById("manage");
+  if(!editMode){ el.innerHTML=""; return; }
+  el.innerHTML=`<div class="mng">
+    <input id="addSym" placeholder="輸入美股代碼後按加入" onkeydown="if(event.key==='Enter')addSymbol()">
+    <button class="addbtn" onclick="addSymbol()">＋ 加到「${currentTabName()}」</button>
+    <span class="mnghint">點各列 ✕ 可刪除 · 新代碼需在每日清單內才有資料</span>
+  </div>`;
+}
+window.toggleEdit=function(){ editMode=!editMode; renderUI(); };
+window.addSymbol=function(){
+  const inp=document.getElementById("addSym"); if(!inp)return;
+  const raw=(inp.value||"").trim(); if(!raw)return;
+  const sym=raw.toUpperCase();
+  let cat=currentTab; if(cat==="focus") cat="big";
+  removed.delete(sym);
+  if(!custom.some(c=>c.s===sym)) custom.push({s:sym,n:sym,cat:cat}); saveWL();
+  GROUPS=buildGroups(); renderUI();
+};
+window.removeSymbol=function(s){ removed.add(s); custom=custom.filter(c=>c.s!==s); saveWL(); GROUPS=buildGroups(); if(!GROUPS.some(g=>g.key===currentTab))currentTab="focus"; renderUI(); };
 
 let currentTab="focus";
-const TABS=[{key:"focus",name:"重點"}].concat(GROUPS.map(g=>({key:g.key,name:g.name.split(" ")[0].replace("/","")})));
 function buildTabs(){
-  document.getElementById("tabs").innerHTML=TABS.map(t=>`<button data-k="${t.key}" class="${t.key===currentTab?'active':''}">${t.name}</button>`).join("");
-  document.querySelectorAll("#tabs button").forEach(b=>b.addEventListener("click",()=>{currentTab=b.dataset.k; buildTabs(); renderTab(currentTab);}));
+  const tabs=[{key:"focus",name:"重點"}].concat(GROUPS.map(g=>({key:g.key,name:g.name.split(" ")[0].replace("/","")})));
+  if(!tabs.some(t=>t.key===currentTab)) currentTab="focus";
+  document.getElementById("tabs").innerHTML=tabs.map(t=>`<button data-k="${t.key}" class="${t.key===currentTab?'active':''}">${t.name}</button>`).join("");
+  document.querySelectorAll("#tabs button").forEach(b=>b.addEventListener("click",()=>{currentTab=b.dataset.k; renderUI();}));
 }
 function renderTab(k){
   const el=document.getElementById("content");
-  if(k==="focus"){
-    el.innerHTML=FOCUS.map(fk=>{ const g=groupByKey(fk); return `<div class="group"><h2>${g.name}</h2>${tableFor(g.items)}</div>`; }).join("");
-  } else { const g=groupByKey(k); el.innerHTML=`<div class="group"><h2>${g.name}</h2>${tableFor(g.items)}</div>`; }
+  if(k==="focus"){ const fg=FOCUS.map(groupByKey).filter(Boolean);
+    el.innerHTML=fg.map(g=>`<div class="group"><h2>${g.name}</h2>${tableFor(g.items)}</div>`).join("");
+  } else { const g=groupByKey(k); el.innerHTML=g?`<div class="group"><h2>${g.name}</h2>${tableFor(g.items)}</div>`:""; }
+}
+function renderUI(){
+  document.getElementById("signals").innerHTML=signalsHtml();
+  document.getElementById("summary").innerHTML=summaryHtml();
+  buildManage();
+  document.getElementById("tabs").style.display="flex";
+  buildTabs(); renderTab(currentTab);
 }
 
 fetch("data.json?t="+Date.now()).then(r=>r.json()).then(d=>{
-  DATA=d;
-  document.getElementById("datadate").textContent=(d._updated||"").slice(0,10)||"—";
+  DATA=d; document.getElementById("datadate").textContent=(d._updated||"").slice(0,10)||"—";
   document.getElementById("status").style.display="none";
-  document.getElementById("signals").innerHTML=signalsHtml();
-  document.getElementById("summary").innerHTML=summaryHtml();
-  document.getElementById("tabs").style.display="flex";
-  buildTabs(); renderTab(currentTab);
-}).catch(e=>{ document.getElementById("status").innerHTML='<span class="err">尚無資料,等待首次自動更新完成。</span>'; });
+  GROUPS=buildGroups(); renderUI();
+}).catch(e=>{ document.getElementById("status").innerHTML='<span class="nd">尚無資料,等待首次自動更新完成。</span>'; });
 </script>
 </body>
 </html>
