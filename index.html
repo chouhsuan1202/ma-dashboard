@@ -124,14 +124,20 @@ function buildSignals(){
     r.mas.forEach(m=>{ if(m.v==null)return; if(m.cross) cross.push({sym:it.s,label:m.label,dir:m.cross}); else if(m.near) near.push({sym:it.s,label:m.label}); }); }));
   return {cross,near};
 }
+function mergeBySym(arr){
+  const map=new Map();
+  arr.forEach(s=>{ if(!map.has(s.sym)) map.set(s.sym,[]); map.get(s.sym).push(s.label); });
+  return [...map.entries()].map(([sym,labels])=>({sym,labels}));
+}
+function fmtLines(labels){ return labels.map(l=>l.replace("線","")).join("/")+"線"; }
 function signalsHtml(){
   const {cross,near}=buildSignals();
   const bull=cross.filter(c=>c.dir==="bull"), bear=cross.filter(c=>c.dir==="bear");
   let h=`<div class="sig"><h3>今日均線訊號</h3>`;
   if(!bull.length&&!bear.length&&!near.length){ h+=`<div class="none">今日無均線交叉或接近訊號。</div></div>`; return h; }
-  if(bull.length) h+=`<div class="sigrow"><span class="tag b">偏多 ↑</span><span class="sigtxt">${bull.map(s=>`${s.sym} 站上${s.label}`).join("、")}</span></div>`;
-  if(bear.length) h+=`<div class="sigrow"><span class="tag s">偏空 ↓</span><span class="sigtxt">${bear.map(s=>`${s.sym} 跌破${s.label}`).join("、")}</span></div>`;
-  if(near.length) h+=`<div class="sigrow"><span class="tag t">接近</span><span class="sigtxt">${near.map(s=>`${s.sym}(${s.label})`).join("、")}</span></div>`;
+  if(bull.length) h+=`<div class="sigrow"><span class="tag b">偏多 ↑</span><span class="sigtxt">${mergeBySym(bull).map(x=>`${x.sym} 站上${fmtLines(x.labels)}`).join("、")}</span></div>`;
+  if(bear.length) h+=`<div class="sigrow"><span class="tag s">偏空 ↓</span><span class="sigtxt">${mergeBySym(bear).map(x=>`${x.sym} 跌破${fmtLines(x.labels)}`).join("、")}</span></div>`;
+  if(near.length) h+=`<div class="sigrow"><span class="tag t">接近</span><span class="sigtxt">${mergeBySym(near).map(x=>`${x.sym}(${fmtLines(x.labels)})`).join("、")}</span></div>`;
   h+=`</div>`; return h;
 }
 function summaryHtml(){
