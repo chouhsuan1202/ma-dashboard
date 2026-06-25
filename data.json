@@ -27,86 +27,86 @@
   "error": "免費方案未支援"
  },
  "AMD": {
-  "price": 519.74,
-  "date": "2026-06-24",
+  "price": 532.57,
+  "date": "2026-06-25",
   "mas": [
    {
     "k": 5,
     "label": "週線",
-    "v": 528.214,
-    "above": false,
-    "diff": -1.6,
-    "cross": null,
-    "near": false
-   },
-   {
-    "k": 20,
-    "label": "月線",
-    "v": 510.369,
+    "v": 532.232,
     "above": true,
-    "diff": 1.84,
-    "cross": null,
-    "near": false
-   },
-   {
-    "k": 60,
-    "label": "季線",
-    "v": 394.0715,
-    "above": true,
-    "diff": 31.89,
-    "cross": null,
-    "near": false
-   },
-   {
-    "k": 240,
-    "label": "年線",
-    "v": 250.017,
-    "above": true,
-    "diff": 107.88,
-    "cross": null,
-    "near": false
-   }
-  ],
-  "score": 3,
-  "valid": 4
- },
- "INTC": {
-  "price": 131.65,
-  "date": "2026-06-24",
-  "mas": [
-   {
-    "k": 5,
-    "label": "週線",
-    "v": 131.992,
-    "above": false,
-    "diff": -0.26,
-    "cross": "bear",
+    "diff": 0.06,
+    "cross": "bull",
     "near": true
    },
    {
     "k": 20,
     "label": "月線",
-    "v": 118.4945,
+    "v": 512.2205,
     "above": true,
-    "diff": 11.1,
+    "diff": 3.97,
     "cross": null,
     "near": false
    },
    {
     "k": 60,
     "label": "季線",
-    "v": 97.0418,
+    "v": 399.6803,
     "above": true,
-    "diff": 35.66,
+    "diff": 33.25,
     "cross": null,
     "near": false
    },
    {
     "k": 240,
     "label": "年線",
-    "v": 51.418,
+    "v": 251.626,
     "above": true,
-    "diff": 156.04,
+    "diff": 111.65,
+    "cross": null,
+    "near": false
+   }
+  ],
+  "score": 4,
+  "valid": 4
+ },
+ "INTC": {
+  "price": 132.87,
+  "date": "2026-06-25",
+  "mas": [
+   {
+    "k": 5,
+    "label": "週線",
+    "v": 134.346,
+    "above": false,
+    "diff": -1.1,
+    "cross": null,
+    "near": true
+   },
+   {
+    "k": 20,
+    "label": "月線",
+    "v": 119.0495,
+    "above": true,
+    "diff": 11.61,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 60,
+    "label": "季線",
+    "v": 98.5698,
+    "above": true,
+    "diff": 34.8,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 240,
+    "label": "年線",
+    "v": 51.874,
+    "above": true,
+    "diff": 156.14,
     "cross": null,
     "near": false
    }
@@ -133,42 +133,42 @@
   "error": "免費方案未支援"
  },
  "PLTR": {
-  "price": 113.5,
-  "date": "2026-06-24",
+  "price": 107.27,
+  "date": "2026-06-25",
   "mas": [
    {
     "k": 5,
     "label": "週線",
-    "v": 121.76,
+    "v": 117.088,
     "above": false,
-    "diff": -6.78,
+    "diff": -8.39,
     "cross": null,
     "near": false
    },
    {
     "k": 20,
     "label": "月線",
-    "v": 134.961,
+    "v": 133.699,
     "above": false,
-    "diff": -15.9,
+    "diff": -19.77,
     "cross": null,
     "near": false
    },
    {
     "k": 60,
     "label": "季線",
-    "v": 138.149,
+    "v": 137.6443,
     "above": false,
-    "diff": -17.84,
+    "diff": -22.07,
     "cross": null,
     "near": false
    },
    {
     "k": 240,
     "label": "年線",
-    "v": 159.7029,
+    "v": 159.5577,
     "above": false,
-    "diff": -28.93,
+    "diff": -32.77,
     "cross": null,
     "near": false
    }
@@ -189,89 +189,89 @@
   "error": "免費方案未支援"
  },
  "ADBE": {
-  "price": 196.57,
-  "date": "2026-06-24",
+  "price": 193.41,
+  "date": "2026-06-25",
   "mas": [
    {
     "k": 5,
     "label": "週線",
-    "v": 196.068,
-    "above": true,
-    "diff": 0.26,
-    "cross": "bull",
+    "v": 195.494,
+    "above": false,
+    "diff": -1.07,
+    "cross": "bear",
     "near": true
    },
    {
     "k": 20,
     "label": "月線",
-    "v": 228.711,
+    "v": 226.4695,
     "above": false,
-    "diff": -14.05,
+    "diff": -14.6,
     "cross": null,
     "near": false
    },
    {
     "k": 60,
     "label": "季線",
-    "v": 239.4048,
+    "v": 238.6095,
     "above": false,
-    "diff": -17.89,
+    "diff": -18.94,
     "cross": null,
     "near": false
    },
    {
     "k": 240,
     "label": "年線",
-    "v": 303.5392,
+    "v": 302.8311,
     "above": false,
-    "diff": -35.24,
+    "diff": -36.13,
     "cross": null,
     "near": false
    }
   ],
-  "score": 1,
+  "score": 0,
   "valid": 4
  },
  "CRWD": {
   "error": "免費方案未支援"
  },
  "NVDA": {
-  "price": 199.0,
-  "date": "2026-06-24",
+  "price": 195.74,
+  "date": "2026-06-25",
   "mas": [
    {
     "k": 5,
     "label": "週線",
-    "v": 204.606,
+    "v": 202.824,
     "above": false,
-    "diff": -2.74,
+    "diff": -3.49,
     "cross": null,
     "near": false
    },
    {
     "k": 20,
     "label": "月線",
-    "v": 209.694,
+    "v": 208.851,
     "above": false,
-    "diff": -5.1,
+    "diff": -6.28,
     "cross": null,
     "near": false
    },
    {
     "k": 60,
     "label": "季線",
-    "v": 205.0632,
+    "v": 205.5727,
     "above": false,
-    "diff": -2.96,
+    "diff": -4.78,
     "cross": null,
     "near": false
    },
    {
     "k": 240,
     "label": "年線",
-    "v": 187.9538,
+    "v": 188.0822,
     "above": true,
-    "diff": 5.88,
+    "diff": 4.07,
     "cross": null,
     "near": false
    }
@@ -280,42 +280,42 @@
   "valid": 4
  },
  "MSFT": {
-  "price": 365.46,
-  "date": "2026-06-24",
+  "price": 352.83,
+  "date": "2026-06-25",
   "mas": [
    {
     "k": 5,
     "label": "週線",
-    "v": 373.01,
+    "v": 367.794,
     "above": false,
-    "diff": -2.02,
+    "diff": -4.07,
     "cross": null,
     "near": false
    },
    {
     "k": 20,
     "label": "月線",
-    "v": 405.801,
+    "v": 402.809,
     "above": false,
-    "diff": -9.94,
+    "diff": -12.41,
     "cross": null,
     "near": false
    },
    {
     "k": 60,
     "label": "季線",
-    "v": 405.7832,
+    "v": 405.681,
     "above": false,
-    "diff": -9.94,
+    "diff": -13.03,
     "cross": null,
     "near": false
    },
    {
     "k": 240,
     "label": "年線",
-    "v": 459.9245,
+    "v": 459.2974,
     "above": false,
-    "diff": -20.54,
+    "diff": -23.18,
     "cross": null,
     "near": false
    }
@@ -324,42 +324,42 @@
   "valid": 4
  },
  "TSLA": {
-  "price": 375.53,
-  "date": "2026-06-24",
+  "price": 375.12,
+  "date": "2026-06-25",
   "mas": [
    {
     "k": 5,
     "label": "週線",
-    "v": 391.812,
+    "v": 387.56,
     "above": false,
-    "diff": -4.16,
+    "diff": -3.21,
     "cross": null,
     "near": false
    },
    {
     "k": 20,
     "label": "月線",
-    "v": 407.9345,
+    "v": 404.6725,
     "above": false,
-    "diff": -7.94,
+    "diff": -7.3,
     "cross": null,
     "near": false
    },
    {
     "k": 60,
     "label": "季線",
-    "v": 396.636,
+    "v": 396.9667,
     "above": false,
-    "diff": -5.32,
+    "diff": -5.5,
     "cross": null,
     "near": false
    },
    {
     "k": 240,
     "label": "年線",
-    "v": 402.662,
+    "v": 402.9187,
     "above": false,
-    "diff": -6.74,
+    "diff": -6.9,
     "cross": null,
     "near": false
    }
@@ -368,86 +368,86 @@
   "valid": 4
  },
  "AAPL": {
-  "price": 293.08,
-  "date": "2026-06-24",
+  "price": 275.15,
+  "date": "2026-06-25",
   "mas": [
    {
     "k": 5,
     "label": "週線",
-    "v": 295.67,
+    "v": 291.51,
     "above": false,
-    "diff": -0.88,
+    "diff": -5.61,
     "cross": null,
-    "near": true
+    "near": false
    },
    {
     "k": 20,
     "label": "月線",
-    "v": 301.51,
+    "v": 299.725,
     "above": false,
-    "diff": -2.8,
+    "diff": -8.2,
     "cross": null,
     "near": false
    },
    {
     "k": 60,
     "label": "季線",
-    "v": 285.0778,
-    "above": true,
-    "diff": 2.81,
-    "cross": null,
+    "v": 285.5532,
+    "above": false,
+    "diff": -3.64,
+    "cross": "bear",
     "near": false
    },
    {
     "k": 240,
     "label": "年線",
-    "v": 261.0051,
+    "v": 261.2717,
     "above": true,
-    "diff": 12.29,
+    "diff": 5.31,
     "cross": null,
     "near": false
    }
   ],
-  "score": 2,
+  "score": 1,
   "valid": 4
  },
  "GOOGL": {
-  "price": 345.29,
-  "date": "2026-06-24",
+  "price": 343.71,
+  "date": "2026-06-25",
   "mas": [
    {
     "k": 5,
     "label": "週線",
-    "v": 354.584,
+    "v": 350.568,
     "above": false,
-    "diff": -2.62,
+    "diff": -1.96,
     "cross": null,
     "near": false
    },
    {
     "k": 20,
     "label": "月線",
-    "v": 365.7075,
+    "v": 363.4515,
     "above": false,
-    "diff": -5.58,
+    "diff": -5.43,
     "cross": null,
     "near": false
    },
    {
     "k": 60,
     "label": "季線",
-    "v": 358.1128,
+    "v": 359.283,
     "above": false,
-    "diff": -3.58,
+    "diff": -4.33,
     "cross": null,
     "near": false
    },
    {
     "k": 240,
     "label": "年線",
-    "v": 293.9393,
+    "v": 294.6206,
     "above": true,
-    "diff": 17.47,
+    "diff": 16.66,
     "cross": null,
     "near": false
    }
@@ -456,86 +456,86 @@
   "valid": 4
  },
  "AMZN": {
-  "price": 234.27,
-  "date": "2026-06-24",
+  "price": 227.01,
+  "date": "2026-06-25",
   "mas": [
    {
     "k": 5,
     "label": "週線",
-    "v": 236.612,
+    "v": 234.514,
     "above": false,
-    "diff": -0.99,
+    "diff": -3.2,
     "cross": null,
-    "near": true
+    "near": false
    },
    {
     "k": 20,
     "label": "月線",
-    "v": 248.333,
+    "v": 246.091,
     "above": false,
-    "diff": -5.66,
+    "diff": -7.75,
     "cross": null,
     "near": false
    },
    {
     "k": 60,
     "label": "季線",
-    "v": 250.5592,
+    "v": 250.9935,
     "above": false,
-    "diff": -6.5,
+    "diff": -9.56,
     "cross": null,
     "near": false
    },
    {
     "k": 240,
     "label": "年線",
-    "v": 231.8017,
-    "above": true,
-    "diff": 1.06,
-    "cross": null,
-    "near": true
+    "v": 231.81,
+    "above": false,
+    "diff": -2.07,
+    "cross": "bear",
+    "near": false
    }
   ],
-  "score": 1,
+  "score": 0,
   "valid": 4
  },
  "META": {
-  "price": 557.67,
-  "date": "2026-06-24",
+  "price": 542.87,
+  "date": "2026-06-25",
   "mas": [
    {
     "k": 5,
     "label": "週線",
-    "v": 565.704,
+    "v": 560.762,
     "above": false,
-    "diff": -1.42,
+    "diff": -3.19,
     "cross": null,
-    "near": true
+    "near": false
    },
    {
     "k": 20,
     "label": "月線",
-    "v": 592.1645,
+    "v": 587.545,
     "above": false,
-    "diff": -5.83,
+    "diff": -7.6,
     "cross": null,
     "near": false
    },
    {
     "k": 60,
     "label": "季線",
-    "v": 613.3557,
+    "v": 613.4638,
     "above": false,
-    "diff": -9.08,
+    "diff": -11.51,
     "cross": null,
     "near": false
    },
    {
     "k": 240,
     "label": "年線",
-    "v": 667.1079,
+    "v": 666.3803,
     "above": false,
-    "diff": -16.4,
+    "diff": -18.53,
     "cross": null,
     "near": false
    }
@@ -547,42 +547,42 @@
   "error": "免費方案未支援"
  },
  "TSM": {
-  "price": 440.83,
-  "date": "2026-06-24",
+  "price": 434.99,
+  "date": "2026-06-25",
   "mas": [
    {
     "k": 5,
     "label": "週線",
-    "v": 447.832,
+    "v": 448.394,
     "above": false,
-    "diff": -1.56,
+    "diff": -2.99,
     "cross": null,
     "near": false
    },
    {
     "k": 20,
     "label": "月線",
-    "v": 433.0,
+    "v": 433.6115,
     "above": true,
-    "diff": 1.81,
+    "diff": 0.32,
     "cross": null,
-    "near": false
+    "near": true
    },
    {
     "k": 60,
     "label": "季線",
-    "v": 400.2238,
+    "v": 402.1982,
     "above": true,
-    "diff": 10.15,
+    "diff": 8.15,
     "cross": null,
     "near": false
    },
    {
     "k": 240,
     "label": "年線",
-    "v": 321.5346,
+    "v": 322.3869,
     "above": true,
-    "diff": 37.1,
+    "diff": 34.93,
     "cross": null,
     "near": false
    }
@@ -590,5 +590,5 @@
   "score": 3,
   "valid": 4
  },
- "_updated": "2026-06-24T23:38:21Z"
+ "_updated": "2026-06-25T23:49:19Z"
 }
