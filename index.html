@@ -81,12 +81,13 @@
 
   /* top strip: signal + leverage side by side */
   .topstrip{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+  .topstrip > *{min-width:0;}
   @media (max-width:420px){ .topstrip{grid-template-columns:1fr;} }
   .topstrip .sig{margin-bottom:0;padding:10px 12px;}
   .topstrip .sig h3{font-size:12px;}
   .topstrip .sig .sigtxt,.topstrip .sig .noneline{font-size:13px;}
   .topstrip .sig .sigrow{overflow:hidden;}
-  .topstrip .sig .sigrow .sigtxt{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .topstrip .sig .sigrow .sigtxt{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:1;}
   /* leverage mini card */
   .levmini{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 12px;cursor:pointer;}
   .levmini .lh{font-size:12px;color:var(--muted);font-weight:600;}
