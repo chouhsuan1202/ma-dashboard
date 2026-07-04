@@ -1,11 +1,11 @@
 # Market Compass(均線多空羅盤)
 
-顯示大盤指數與持股 / 觀察清單各檔收盤價相對 **週線(5MA)/月線(20MA)/季線(60MA)/年線(240MA)** 的多空狀態(綠=站上、紅=跌破),並加上槓桿分頁。資料由 GitHub Actions 每日自動向 Financial Modeling Prep(FMP)抓取並重算。
+顯示大盤指數與持股 / 觀察清單各檔收盤價相對 **週線(5MA)/月線(20MA)/季線(60MA)/年線(240MA)** 的多空狀態(綠=站上、紅=跌破),大盤分頁並附市場訊號紅綠燈。資料由 GitHub Actions 每日自動向 Financial Modeling Prep(FMP)抓取並重算。
 
 ## ⚠️ 鐵則:倉庫保持 Public,但不得含任何帳戶數字
 
 > 本倉庫只放代碼、順序與分組,**不得出現股數 / 金額 / 槓桿 / 保證金等任何帳戶數字**。
-> 槓桿分頁的帳戶快照只存在手機瀏覽器 localStorage(見下方流程),`lev.json` 已列入 `.gitignore`,不可 commit。
+> 帳戶相關數字(若有)一律不落地:不寫進本倉庫、不進 commit。
 
 ## 清單結構(watchlist.json)
 
@@ -13,7 +13,7 @@
 
 ```jsonc
 {
-  "indexes":  ["^GSPC", "^NDX", "^SOX", "^VIX"],          // 大盤 / 槓桿分頁
+  "indexes":  ["^GSPC", "^NDX", "^SOX", "^VIX"],          // 大盤分頁指數
   "holdings": [                                            // 實際持股(依此順序顯示)
     { "s": "TSM", "dn": "台積電", "note": "2330 現股+ADR" } // s=抓數據代號, dn=顯示名, note=說明
   ],
@@ -26,20 +26,10 @@
 - 抓資料的代碼集合 = `holdings[].s` + `watch[].s`(去重),再加上 `indexes`。
 - `build_data.py` 對同一代碼有記憶快取,重複代碼(含 fallback 代理)只抓一次,省 FMP 額度。
 
-## 帳戶槓桿快照(lev.json)
-
-槓桿分頁優先讀 `localStorage("ma_lev_snapshot")`,其次嘗試 `lev.json`(公開版不存在,404 → 顯示「尚無槓桿快照」)。
-
-**更新流程(帳戶數字不落地):**
-
-1. 在 IBKR 截圖帳戶總覽(淨值、現金、持倉、保證金等)。
-2. 把截圖給 Claude,請它產生「貼上碼」(一段 JSON)。
-3. 手機打開網頁 →「槓桿 → 更新資料」→ 貼上 → 儲存。資料只存在該裝置瀏覽器,不會上傳。
-
 ## 檔案結構
 ```
 watchlist.json               # ← 唯一清單來源(indexes / holdings / watch)
-index.html                   # 前端頁面(fetch watchlist.json + data.json;lev 快照走 localStorage)
+index.html                   # 前端頁面(fetch watchlist.json + data.json)
 data.json                    # 由 Actions 產生的均線資料
 build_data.py                # 抓 FMP、算均線、寫 data.json
 .github/workflows/update.yml # 每日排程
@@ -69,7 +59,7 @@ FMP 不支援的代碼(含多數指數與個股)會**自動改抓 Yahoo Finance*
 使用者會在 chat 丟兩類更新,處理規則:
 
 1. **關注股票增減**:改 `watchlist.json`——持有變動改 `holdings`(維持淨值權重順序,`s`=FMP 代號、`dn`=顯示名、`note`=說明);觀察標的改 `watch`(`s`+`group`)。改完由使用者自己 `git push`,AI 不執行 push。
-2. **IBKR 帳戶截圖**:讀值後**只輸出「貼上碼」JSON 給使用者**(欄位:updated_at, currency, net_liquidation, settled_cash, gross_position_value, maintenance_margin, excess_liquidity, buying_power, unrealized_pnl, holdings[]),由使用者貼進網頁「槓桿 → 更新資料」。**絕不可把任何帳戶數字寫進本倉庫**(lev.json 已在 .gitignore)。
+2. **IBKR 帳戶截圖**:僅在對話中分析(曝險倍率/借款比例/追繳緩衝),本倉庫與本儀表板不儲存任何帳戶數字。
 
 鐵則:本倉庫 Public,只放代碼、順序與分組;股數/金額/槓桿/保證金一律不落地。
 

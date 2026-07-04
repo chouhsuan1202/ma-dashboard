@@ -79,24 +79,11 @@
     color:#374151;border-radius:8px;cursor:pointer;}
   .seg button.active{background:var(--card);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08);}
 
-  /* top strip: signal + leverage side by side */
-  .topstrip{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
-  .topstrip > *{min-width:0;}
-  @media (max-width:420px){ .topstrip{grid-template-columns:1fr;} }
+  /* top strip: 今日均線訊號（單欄全寬） */
+  .topstrip{margin-bottom:14px;}
   .topstrip .sig{margin-bottom:0;padding:10px 12px;}
   .topstrip .sig h3{font-size:12px;}
   .topstrip .sig .sigtxt,.topstrip .sig .noneline{font-size:13px;}
-  .topstrip .sig .sigrow{overflow:hidden;}
-  .topstrip .sig .sigrow .sigtxt{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:1;}
-  /* leverage mini card */
-  .levmini{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 12px;cursor:pointer;}
-  .levmini .lh{font-size:12px;color:var(--muted);font-weight:600;}
-  .levmini .big{font-size:26px;font-weight:800;font-variant-numeric:tabular-nums;margin:2px 0 4px;}
-  .levmini .st{display:flex;align-items:center;gap:6px;font-size:12px;}
-  .levmini .st .lamp{width:11px;height:11px;box-shadow:none;}
-  .levmini .sub2{font-size:11px;color:var(--muted);margin-top:3px;}
-  .levmini{position:relative;}
-  .levmini .chev{position:absolute;top:8px;right:12px;font-size:16px;font-weight:700;color:var(--faint);line-height:1;}
 
   /* signals */
   .sig{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:11px;}
@@ -141,37 +128,6 @@
   .caret{font-size:11px;color:var(--faint);margin-left:2px;}
 
   footer{color:var(--muted);font-size:12px;margin-top:22px;text-align:center;line-height:1.6;}
-
-  /* leverage tab */
-  .lev-snap{font-size:11.5px;color:var(--muted);margin-bottom:12px;}
-  .lcard{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 12px 11px;}
-  .lcard.span2{grid-column:1 / -1;}
-  .lcard .lh{font-size:12px;color:var(--muted);font-weight:600;}
-  .lcard .big{font-size:26px;font-weight:800;font-variant-numeric:tabular-nums;margin:5px 0 3px;}
-  .lcard .interp{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.4;}
-  .lcard .thr{font-size:10.5px;color:var(--faint);margin-top:4px;}
-  .hrow{display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding:7px 0;border-top:1px solid var(--line);}
-  .hrow:first-of-type{border-top:none;}
-  .hrow .hl{font-size:13px;}
-  .hrow .hl .hd{font-size:10.5px;color:var(--faint);display:block;margin-top:1px;}
-  .hrow .hr{text-align:right;font-variant-numeric:tabular-nums;}
-  .hrow .hr .hv{font-size:14px;font-weight:800;}
-  .hrow .hr .hs{font-size:11px;color:var(--muted);display:block;margin-top:1px;}
-  .num-dn{color:var(--dn);}
-  details.lev-upd{margin-top:14px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:0 14px;}
-  details.lev-upd>summary{cursor:pointer;font-size:13px;font-weight:600;color:var(--ink);padding:12px 0;list-style:none;}
-  details.lev-upd>summary::-webkit-details-marker{display:none;}
-  details.lev-upd>summary::before{content:"▸ ";}
-  details.lev-upd[open]>summary::before{content:"▾ ";}
-  .lev-upd .desc{font-size:11.5px;color:var(--muted);line-height:1.5;margin:0 0 8px;}
-  .lev-upd textarea{width:100%;min-height:110px;font-size:12px;font-family:ui-monospace,Menlo,monospace;
-    border:1px solid var(--line);border-radius:10px;padding:8px;resize:vertical;background:var(--bg);color:var(--ink);}
-  .lev-upd .btns{display:flex;gap:8px;margin:8px 0 14px;}
-  .lev-upd .btns button{flex:1;font-size:13px;font-weight:600;padding:9px 6px;border-radius:10px;cursor:pointer;border:1px solid var(--line);}
-  .lev-upd .btns .save{background:var(--ink);color:#fff;border-color:var(--ink);}
-  .lev-upd .btns .clr{background:#eceef1;color:#374151;}
-  .lev-upd .msgline{font-size:11.5px;margin:0 0 12px;min-height:16px;}
-  .lev-upd .msgline.ok{color:var(--up);} .lev-upd .msgline.bad{color:var(--dn);}
 </style>
 </head>
 <body>
@@ -185,7 +141,6 @@
     <button data-tab="macro" class="active">大盤</button>
     <button data-tab="stocks">持股</button>
     <button data-tab="watch">觀察清單</button>
-    <button data-tab="lev">槓桿</button>
   </div>
 
   <div id="topstrip" class="topstrip"></div>
@@ -194,7 +149,6 @@
   <div id="macro" class="pane"></div>
   <div id="stocks" class="pane" hidden></div>
   <div id="watch" class="pane" hidden></div>
-  <div id="lev" class="pane" hidden></div>
 
   <footer>Designed by Hsuan x her AI bestie</footer>
 </div>
@@ -207,7 +161,7 @@ const IDX_META = {
   "^VIX":  {short:"VIX", full:"波動率指數"},
 };
 
-let WL=null, DATA=null, LEV_SNAPSHOT=null;
+let WL=null, DATA=null;
 
 /* ---------- helpers ---------- */
 function maByK(r,k){ return (r&&r.mas)?r.mas.find(m=>m.k===k):null; }
@@ -281,7 +235,7 @@ function indexCard(sym){
     ${ipHtml}
   </div>`;
 }
-// 大盤紅綠燈邏輯：回傳 {level,msg,why} 供大盤分頁與槓桿分頁重用
+// 大盤紅綠燈邏輯（只看 NDX 60/240MA 與 VIX）：回傳 {level,msg,why} 供大盤分頁紅綠燈卡使用
 function macroLevel(){
   const ndx=DATA["^NDX"], vix=DATA["^VIX"];
   const a=k=>{ const m=maByK(ndx,k); return (m&&m.v!=null)?m.above:null; };
@@ -302,10 +256,16 @@ function macroLevel(){
   why=why.replace(/\s+/g," ").trim();
   return {level,msg,why};
 }
+function macroRuleHtml(){
+  const {level,msg,why}=macroLevel();
+  return `<div class="rule"><span class="lamp ${level}"></span>
+    <div><div class="msg">${msg}</div><div class="why">${why}</div></div></div>`;
+}
 function renderMacro(){
   const idx=(WL.indexes||[]);
   document.getElementById("macro").innerHTML =
-    `<div class="cards">${idx.map(indexCard).join("")}</div>`;
+    `<div class="cards">${idx.map(indexCard).join("")}</div>` +
+    macroRuleHtml();
 }
 
 /* ---------- 訊號（統計 holdings + watch 全部） ---------- */
@@ -461,172 +421,9 @@ function renderWatch(){
   document.getElementById("watch").innerHTML=html;
 }
 
-/* ---------- 槓桿分頁 ---------- */
-const LEV_KEY="ma_lev_snapshot";
-function fmtNum(v,dp){
-  if(v==null||isNaN(v)) return "—";
-  const n=Number(v).toLocaleString(undefined,{minimumFractionDigits:dp,maximumFractionDigits:dp});
-  return v<0 ? `<span class="num-dn">−${Number(-v).toLocaleString(undefined,{minimumFractionDigits:dp,maximumFractionDigits:dp})}</span>` : n;
-}
-function loadLevSnapshot(){
-  try{
-    const raw=localStorage.getItem(LEV_KEY);
-    if(raw){ const o=JSON.parse(raw); if(o&&typeof o==="object") return o; }
-  }catch(e){}
-  return LEV_SNAPSHOT;
-}
-function borrowPct(s){
-  const nl=s.net_liquidation||0;
-  if(!nl) return 0;
-  return Math.max(0, -(s.settled_cash||0)) / nl * 100;
-}
-function levMetricCard(cfg){
-  return `<div class="lcard${cfg.span2?' span2':''}">
-    <div class="lh">${cfg.title}</div>
-    <div class="big">${cfg.value}</div>
-    <div><span class="mapill" style="background:${cfg.color}">${cfg.badge}</span></div>
-    <div class="interp">${cfg.desc}</div>
-    ${cfg.thr?`<div class="thr">${cfg.thr}</div>`:""}
-  </div>`;
-}
-function levJudgeCard(s){
-  const {level:mLevel}=macroLevel();
-  const bp=borrowPct(s);
-  let level,msg;
-  if(mLevel==="red" || bp>30){ level="red"; msg="降槓桿"; }
-  else if(mLevel==="yellow" || (bp>=20&&bp<=30)){ level="yellow"; msg="不加碼"; }
-  else if(mLevel==="green" && bp<20){ level="green"; msg="可維持,尚有加碼空間"; }
-  else { level="yellow"; msg="不加碼"; }
-  // 依據文字
-  const ndx=DATA["^NDX"];
-  const a=k=>{ const m=maByK(ndx,k); return (m&&m.v!=null)?m.above:null; };
-  const a60=a(60),a240=a(240);
-  let macroWhy;
-  if(mLevel==="green") macroWhy="NDX 站上季線與年線";
-  else if(mLevel==="yellow") macroWhy="NDX 在年線上、但跌破季線";
-  else if(mLevel==="red") macroWhy=(a240===false?"NDX 跌破年線":"VIX 偏高、大盤轉弱");
-  else macroWhy="大盤資料不足";
-  const borrowWhy = bp<=0 ? "無借款" : `借款比例 ${bp.toFixed(1)}%`;
-  const why=`${macroWhy};${borrowWhy}`;
-  return `<div class="rule"><span class="lamp ${level}"></span>
-    <div><div class="msg">${msg}</div><div class="why">${why}</div></div></div>`;
-}
-function levHoldingsCard(s){
-  const rows=(s.holdings||[]).map(h=>{
-    const left = h.desc
-      ? `<div class="hl">${h.name}<span class="hd">${h.desc}</span></div>`
-      : `<div class="hl">${h.name}</div>`;
-    let sub="";
-    if(h.quantity!=null) sub=`${h.quantity} 股 · 均價 ${fmtNum(h.avg_price,2)}`;
-    const pnl = (h.unrealized_pnl!=null) ? `<span class="hs">未實現 ${fmtNum(h.unrealized_pnl,2)}</span>` : "";
-    return `<div class="hrow">${left}
-      <div class="hr"><span class="hv">${fmtNum(h.market_value,2)}</span>
-      ${sub?`<span class="hs">${sub}</span>`:""}${pnl}</div></div>`;
-  }).join("");
-  return `<div class="sig"><h3>持倉明細</h3>${rows}</div>`;
-}
-function levUpdateBox(){
-  return `<details class="lev-upd">
-    <summary>更新資料</summary>
-    <p class="desc">把 IBKR 截圖傳給 Claude,取得貼上碼後貼在這裡。資料只存在此裝置瀏覽器,不會上傳。</p>
-    <textarea id="levInput" placeholder='貼上 JSON 快照…'></textarea>
-    <div class="btns">
-      <button class="save" id="levSave">儲存</button>
-      <button class="clr" id="levClear">清除</button>
-    </div>
-    <p class="msgline" id="levMsg"></p>
-  </details>`;
-}
-function renderLev(){
-  const s=loadLevSnapshot();
-  if(!s){
-    document.getElementById("lev").innerHTML =
-      `<div class="lev-snap">尚無槓桿快照</div>`+
-      `<div class="rule"><span class="lamp gray"></span><div><div class="msg">尚無槓桿快照</div>`+
-      `<div class="why">lev.json 不存在或載入失敗;可在下方手動貼上 IBKR 快照。</div></div></div>`+
-      levUpdateBox();
-    return;
-  }
-  const nl=s.net_liquidation||0;
-
-  // 借款比例
-  const bp=borrowPct(s);
-  let bpColor,bpBadge;
-  if(bp>30){bpColor="var(--red)";bpBadge="危險";}
-  else if(bp>=20){bpColor="var(--yellow)";bpBadge="警戒";}
-  else {bpColor="var(--green)";bpBadge="安全";}
-
-  // 曝險倍率
-  const exp = nl ? (s.gross_position_value||0)/nl : 0;
-  let expColor,expBadge;
-  if(exp>1.5){expColor="var(--red)";expBadge="高槓桿";}
-  else if(exp>1.0){expColor="var(--yellow)";expBadge="輕度槓桿";}
-  else {expColor="var(--green)";expBadge="無槓桿";}
-
-  // 追繳緩衝
-  const buf = nl ? (s.excess_liquidity||0)/nl*100 : 0;
-  let bufColor,bufBadge;
-  if(buf<20){bufColor="var(--red)";bufBadge="緊張";}
-  else if(buf<=50){bufColor="var(--yellow)";bufBadge="注意";}
-  else {bufColor="var(--green)";bufBadge="充裕";}
-
-  const cards=
-    levMetricCard({title:"借款比例",value:bp.toFixed(1)+"%",color:bpColor,badge:bpBadge,
-      desc:"借款佔淨值比例,越低越安全。",thr:"警戒線 20% / 危險線 30%"}) +
-    levMetricCard({title:"曝險倍率",value:exp.toFixed(2)+"x",color:expColor,badge:expBadge,
-      desc:"持倉市值相對淨值的槓桿倍數。"}) +
-    levMetricCard({title:"追繳緩衝",value:buf.toFixed(1)+"%",color:bufColor,badge:bufBadge,
-      desc:"距離追繳的安全墊,越高越安全。",span2:true});
-
-  let html=`<div class="lev-snap">IBKR 手動快照 · ${s.updated_at||"—"} · ${s.currency||""}</div>`;
-  html+=`<div class="cards">${cards}</div>`;
-  html+=levJudgeCard(s);
-  html+=levHoldingsCard(s);
-  html+=levUpdateBox();
-  document.getElementById("lev").innerHTML=html;
-}
-
-/* 綜合判斷（macroLevel + 借款比例），與 levJudgeCard 一致，供頂部小卡用 */
-function levVerdict(s){
-  const {level:mLevel}=macroLevel();
-  const bp=borrowPct(s);
-  let level,msg;
-  if(mLevel==="red" || bp>30){ level="red"; msg="降槓桿"; }
-  else if(mLevel==="yellow" || (bp>=20&&bp<=30)){ level="yellow"; msg="不加碼"; }
-  else if(mLevel==="green" && bp<20){ level="green"; msg="可維持"; }
-  else { level="yellow"; msg="不加碼"; }
-  return {level,msg};
-}
-function levMiniHtml(){
-  const s=loadLevSnapshot();
-  if(!s){
-    return `<div class="levmini" id="levMini">
-      <span class="chev">›</span>
-      <div class="lh">槓桿</div>
-      <div class="big" style="color:var(--faint)">—</div>
-      <div class="st"><span class="lamp gray"></span>尚無槓桿快照</div>
-      <div class="sub2">前往槓桿分頁手動貼上</div>
-    </div>`;
-  }
-  const nl=s.net_liquidation||0;
-  const exp = nl ? (s.gross_position_value||0)/nl : 0;
-  let expColor;
-  if(exp>1.5) expColor="var(--red)";
-  else if(exp>1.0) expColor="var(--yellow)";
-  else expColor="var(--green)";
-  const {level,msg}=levVerdict(s);
-  const bp=borrowPct(s);
-  const buf = nl ? (s.excess_liquidity||0)/nl*100 : 0;
-  return `<div class="levmini" id="levMini">
-    <span class="chev">›</span>
-    <div class="lh">槓桿</div>
-    <div class="big" style="color:${expColor}">${exp.toFixed(2)}x</div>
-    <div class="st"><span class="lamp ${level}"></span>SXRV:${msg}</div>
-    <div class="sub2">借款 ${Math.round(bp)}% · 緩衝 ${Math.round(buf)}%</div>
-  </div>`;
-}
+/* ---------- 頂部訊息列（今日均線訊號） ---------- */
 function renderTopStrip(){
-  document.getElementById("topstrip").innerHTML = signalsHtml() + levMiniHtml();
+  document.getElementById("topstrip").innerHTML = signalsHtml();
 }
 
 /* 切到指定分頁（重用 tab 切換邏輯，含 active 樣式更新） */
@@ -635,7 +432,6 @@ function switchTab(t){
   document.getElementById("macro").hidden  = t!=="macro";
   document.getElementById("stocks").hidden = t!=="stocks";
   document.getElementById("watch").hidden  = t!=="watch";
-  document.getElementById("lev").hidden    = t!=="lev";
 }
 
 /* ---------- interactions ---------- */
@@ -643,33 +439,6 @@ document.querySelectorAll(".tabs button").forEach(b=>{
   b.addEventListener("click",()=>switchTab(b.dataset.tab));
 });
 document.addEventListener("click",e=>{
-  // 頂部槓桿小卡 → 切到槓桿分頁
-  if(e.target.closest("#levMini")){ switchTab("lev"); return; }
-  // 槓桿：儲存 / 清除
-  if(e.target.id==="levSave"){
-    const ta=document.getElementById("levInput");
-    const msg=document.getElementById("levMsg");
-    try{
-      const o=JSON.parse(ta.value);
-      if(!o||typeof o!=="object") throw new Error("格式錯誤");
-      localStorage.setItem(LEV_KEY, JSON.stringify(o));
-      renderLev();
-      renderTopStrip();
-      const m2=document.getElementById("levMsg");
-      if(m2){ m2.className="msgline ok"; m2.textContent="已儲存並更新。"; }
-    }catch(err){
-      msg.className="msgline bad"; msg.textContent="JSON 解析失敗:"+err.message;
-    }
-    return;
-  }
-  if(e.target.id==="levClear"){
-    localStorage.removeItem(LEV_KEY);
-    renderLev();
-    renderTopStrip();
-    const m2=document.getElementById("levMsg");
-    if(m2){ m2.className="msgline ok"; m2.textContent="已清除,回到內嵌快照。"; }
-    return;
-  }
   const seg=e.target.closest(".seg button");
   if(seg){
     const inWatch = seg.closest("#watch");
@@ -681,13 +450,12 @@ document.addEventListener("click",e=>{
   if(row) row.classList.toggle("open");
 });
 
-/* ---------- load（讀取 watchlist.json / data.json / lev.json） ---------- */
+/* ---------- load（讀取 watchlist.json / data.json） ---------- */
 Promise.all([
   fetch("watchlist.json?t="+Date.now()).then(r=>r.json()),
   fetch("data.json?t="+Date.now()).then(r=>r.json()),
-  fetch("lev.json?t="+Date.now()).then(r=>r.ok?r.json():null).catch(()=>null),
-]).then(([wl,data,lev])=>{
-  WL=wl; DATA=data; LEV_SNAPSHOT=(lev&&typeof lev==="object")?lev:null;
+]).then(([wl,data])=>{
+  WL=wl; DATA=data;
   buildHoldMaps();
   document.getElementById("datadate").textContent=(DATA._updated||"").slice(0,10)||"—";
   document.getElementById("status").style.display="none";
@@ -695,7 +463,6 @@ Promise.all([
   renderMacro();
   renderStocks();
   renderWatch();
-  renderLev();
 }).catch(e=>{
   document.getElementById("status").innerHTML='<span class="nd">尚無資料,等待首次自動更新完成。</span>';
 });
