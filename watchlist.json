@@ -1,0 +1,36 @@
+{
+  "indexes": ["^GSPC", "^NDX", "^SOX", "^VIX"],
+  "holdings": [
+    {"s": "TSM",  "dn": "台積電",     "note": "2330 現股+ADR"},
+    {"s": "EWT",  "dn": "台股 ETF",   "note": "0050/006208/0056 · 以 EWT 估"},
+    {"s": "SPY",  "dn": "S&P 500",   "note": "VUSA/00646 · 以 SPY 估"},
+    {"s": "QQQ",  "dn": "SXRV",      "note": "NASDAQ 100 · 以 QQQ 估"},
+    {"s": "GLD",  "dn": "黃金",       "note": "Xetra Gold · 以 GLD 估"},
+    {"s": "EWY",  "dn": "韓股 ETF",   "note": "以 EWY 估"},
+    {"s": "SOXX", "dn": "全球半導體", "note": "以 SOXX 估"}
+  ],
+  "watch": [
+    {"s": "NVDA",  "group": "半導體"},
+    {"s": "AMD",   "group": "半導體"},
+    {"s": "AVGO",  "group": "半導體"},
+    {"s": "ASML",  "group": "半導體"},
+    {"s": "MRVL",  "group": "半導體"},
+    {"s": "SNDK",  "group": "記憶體"},
+    {"s": "MU",    "group": "記憶體"},
+    {"s": "GOOGL", "group": "巨頭"},
+    {"s": "META",  "group": "巨頭"},
+    {"s": "AMZN",  "group": "巨頭"},
+    {"s": "AAPL",  "group": "巨頭"},
+    {"s": "MSFT",  "group": "巨頭"},
+    {"s": "TSLA",  "group": "巨頭"},
+    {"s": "LITE",  "group": "光通訊"},
+    {"s": "COHR",  "group": "光通訊"},
+    {"s": "AAOI",  "group": "光通訊"},
+    {"s": "ANET",  "group": "AI基建"},
+    {"s": "ARM",   "group": "半導體"},
+    {"s": "PLTR",  "group": "軟體"},
+    {"s": "CRWD",  "group": "軟體"},
+    {"s": "NET",   "group": "軟體"},
+    {"s": "BRK-B", "group": "其他"}
+  ]
+}
