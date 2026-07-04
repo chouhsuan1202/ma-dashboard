@@ -1,1 +1,641 @@
-{}
+{
+ "^GSPC": {
+  "price": 7483.24,
+  "date": "2026-07-02",
+  "mas": [
+   {
+    "k": 5,
+    "label": "週線",
+    "v": 7452.058,
+    "above": true,
+    "diff": 0.42,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 20,
+    "label": "月線",
+    "v": 7432.685,
+    "above": true,
+    "diff": 0.68,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 60,
+    "label": "季線",
+    "v": 7322.9773,
+    "above": true,
+    "diff": 2.19,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 240,
+    "label": "年線",
+    "v": 6856.3869,
+    "above": true,
+    "diff": 9.14,
+    "cross": null,
+    "near": false
+   }
+  ],
+  "score": 4,
+  "valid": 4,
+  "src": "^GSPC",
+  "fallback": false
+ },
+ "^NDX": {
+  "error": "HTTP 402 Premium Query Parameter: 'Special Endpoint : This value set for 'symbol' is not available under your current subscriptio",
+  "fallback": false
+ },
+ "^SOX": {
+  "error": "HTTP 402 Premium Query Parameter: 'Special Endpoint : This value set for 'symbol' is not available under your current subscriptio",
+  "fallback": false
+ },
+ "^VIX": {
+  "price": 16.15,
+  "date": "2026-07-02",
+  "mas": [
+   {
+    "k": 5,
+    "label": "週線",
+    "v": 17.05,
+    "above": false,
+    "diff": -5.28,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 20,
+    "label": "月線",
+    "v": 18.1015,
+    "above": false,
+    "diff": -10.78,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 60,
+    "label": "季線",
+    "v": 17.8832,
+    "above": false,
+    "diff": -9.69,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 240,
+    "label": "年線",
+    "v": 18.1609,
+    "above": false,
+    "diff": -11.07,
+    "cross": null,
+    "near": false
+   }
+  ],
+  "score": 0,
+  "valid": 4,
+  "src": "^VIX",
+  "fallback": false
+ },
+ "TSM": {
+  "price": 434.16,
+  "date": "2026-07-02",
+  "mas": [
+   {
+    "k": 5,
+    "label": "週線",
+    "v": 448.682,
+    "above": false,
+    "diff": -3.24,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 20,
+    "label": "月線",
+    "v": 437.666,
+    "above": false,
+    "diff": -0.8,
+    "cross": "bear",
+    "near": false
+   },
+   {
+    "k": 60,
+    "label": "季線",
+    "v": 411.1623,
+    "above": true,
+    "diff": 5.59,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 240,
+    "label": "年線",
+    "v": 326.7795,
+    "above": true,
+    "diff": 32.86,
+    "cross": null,
+    "near": false
+   }
+  ],
+  "score": 2,
+  "valid": 4
+ },
+ "EWT": {
+  "error": "免費方案未支援"
+ },
+ "SPY": {
+  "price": 744.78,
+  "date": "2026-07-02",
+  "mas": [
+   {
+    "k": 5,
+    "label": "週線",
+    "v": 741.46,
+    "above": true,
+    "diff": 0.45,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 20,
+    "label": "月線",
+    "v": 741.076,
+    "above": true,
+    "diff": 0.5,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 60,
+    "label": "季線",
+    "v": 730.196,
+    "above": true,
+    "diff": 2.0,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 240,
+    "label": "年線",
+    "v": 683.7181,
+    "above": true,
+    "diff": 8.93,
+    "cross": null,
+    "near": false
+   }
+  ],
+  "score": 4,
+  "valid": 4
+ },
+ "QQQ": {
+  "error": "免費方案未支援"
+ },
+ "GLD": {
+  "error": "免費方案未支援"
+ },
+ "EWY": {
+  "error": "免費方案未支援"
+ },
+ "SOXX": {
+  "error": "免費方案未支援"
+ },
+ "NVDA": {
+  "price": 194.83,
+  "date": "2026-07-02",
+  "mas": [
+   {
+    "k": 5,
+    "label": "週線",
+    "v": 196.0,
+    "above": false,
+    "diff": -0.6,
+    "cross": "bear",
+    "near": false
+   },
+   {
+    "k": 20,
+    "label": "月線",
+    "v": 203.485,
+    "above": false,
+    "diff": -4.25,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 60,
+    "label": "季線",
+    "v": 207.1847,
+    "above": false,
+    "diff": -5.96,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 240,
+    "label": "年線",
+    "v": 188.6175,
+    "above": true,
+    "diff": 3.29,
+    "cross": null,
+    "near": false
+   }
+  ],
+  "score": 1,
+  "valid": 4
+ },
+ "AMD": {
+  "price": 517.82,
+  "date": "2026-07-02",
+  "mas": [
+   {
+    "k": 5,
+    "label": "週線",
+    "v": 540.136,
+    "above": false,
+    "diff": -4.13,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 20,
+    "label": "月線",
+    "v": 516.8355,
+    "above": true,
+    "diff": 0.19,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 60,
+    "label": "季線",
+    "v": 426.8108,
+    "above": true,
+    "diff": 21.32,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 240,
+    "label": "年線",
+    "v": 259.6316,
+    "above": true,
+    "diff": 99.44,
+    "cross": null,
+    "near": false
+   }
+  ],
+  "score": 3,
+  "valid": 4
+ },
+ "AVGO": {
+  "error": "免費方案未支援"
+ },
+ "ASML": {
+  "error": "免費方案未支援"
+ },
+ "MRVL": {
+  "error": "免費方案未支援"
+ },
+ "SNDK": {
+  "error": "免費方案未支援"
+ },
+ "MU": {
+  "error": "免費方案未支援"
+ },
+ "GOOGL": {
+  "price": 359.91,
+  "date": "2026-07-02",
+  "mas": [
+   {
+    "k": 5,
+    "label": "週線",
+    "v": 353.906,
+    "above": true,
+    "diff": 1.7,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 20,
+    "label": "月線",
+    "v": 358.544,
+    "above": true,
+    "diff": 0.38,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 60,
+    "label": "季線",
+    "v": 364.0057,
+    "above": false,
+    "diff": -1.13,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 240,
+    "label": "年線",
+    "v": 298.1805,
+    "above": true,
+    "diff": 20.7,
+    "cross": null,
+    "near": false
+   }
+  ],
+  "score": 3,
+  "valid": 4
+ },
+ "META": {
+  "price": 582.9,
+  "date": "2026-07-02",
+  "mas": [
+   {
+    "k": 5,
+    "label": "週線",
+    "v": 574.39,
+    "above": true,
+    "diff": 1.48,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 20,
+    "label": "月線",
+    "v": 576.6985,
+    "above": true,
+    "diff": 1.08,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 60,
+    "label": "季線",
+    "v": 613.4315,
+    "above": false,
+    "diff": -4.98,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 240,
+    "label": "年線",
+    "v": 663.5971,
+    "above": false,
+    "diff": -12.16,
+    "cross": null,
+    "near": false
+   }
+  ],
+  "score": 2,
+  "valid": 4
+ },
+ "AMZN": {
+  "price": 242.67,
+  "date": "2026-07-02",
+  "mas": [
+   {
+    "k": 5,
+    "label": "週線",
+    "v": 239.108,
+    "above": true,
+    "diff": 1.49,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 20,
+    "label": "月線",
+    "v": 240.246,
+    "above": true,
+    "diff": 1.01,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 60,
+    "label": "季線",
+    "v": 253.333,
+    "above": false,
+    "diff": -4.21,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 240,
+    "label": "年線",
+    "v": 232.103,
+    "above": true,
+    "diff": 4.55,
+    "cross": null,
+    "near": false
+   }
+  ],
+  "score": 3,
+  "valid": 4
+ },
+ "AAPL": {
+  "price": 308.63,
+  "date": "2026-07-02",
+  "mas": [
+   {
+    "k": 5,
+    "label": "週線",
+    "v": 291.578,
+    "above": true,
+    "diff": 5.85,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 20,
+    "label": "月線",
+    "v": 294.8025,
+    "above": true,
+    "diff": 4.69,
+    "cross": "bull",
+    "near": false
+   },
+   {
+    "k": 60,
+    "label": "季線",
+    "v": 288.5563,
+    "above": true,
+    "diff": 6.96,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 240,
+    "label": "年線",
+    "v": 262.9751,
+    "above": true,
+    "diff": 17.36,
+    "cross": null,
+    "near": false
+   }
+  ],
+  "score": 4,
+  "valid": 4
+ },
+ "MSFT": {
+  "price": 390.49,
+  "date": "2026-07-02",
+  "mas": [
+   {
+    "k": 5,
+    "label": "週線",
+    "v": 377.866,
+    "above": true,
+    "diff": 3.34,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 20,
+    "label": "月線",
+    "v": 386.9555,
+    "above": true,
+    "diff": 0.91,
+    "cross": "bull",
+    "near": false
+   },
+   {
+    "k": 60,
+    "label": "季線",
+    "v": 406.2003,
+    "above": false,
+    "diff": -3.87,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 240,
+    "label": "年線",
+    "v": 456.6021,
+    "above": false,
+    "diff": -14.48,
+    "cross": null,
+    "near": false
+   }
+  ],
+  "score": 2,
+  "valid": 4
+ },
+ "TSLA": {
+  "price": 393.45,
+  "date": "2026-07-02",
+  "mas": [
+   {
+    "k": 5,
+    "label": "週線",
+    "v": 406.18,
+    "above": false,
+    "diff": -3.13,
+    "cross": "bear",
+    "near": false
+   },
+   {
+    "k": 20,
+    "label": "月線",
+    "v": 399.157,
+    "above": false,
+    "diff": -1.43,
+    "cross": "bear",
+    "near": false
+   },
+   {
+    "k": 60,
+    "label": "季線",
+    "v": 400.5972,
+    "above": false,
+    "diff": -1.78,
+    "cross": "bear",
+    "near": false
+   },
+   {
+    "k": 240,
+    "label": "年線",
+    "v": 404.7208,
+    "above": false,
+    "diff": -2.78,
+    "cross": "bear",
+    "near": false
+   }
+  ],
+  "score": 0,
+  "valid": 4
+ },
+ "LITE": {
+  "error": "免費方案未支援"
+ },
+ "COHR": {
+  "error": "免費方案未支援"
+ },
+ "AAOI": {
+  "error": "免費方案未支援"
+ },
+ "ANET": {
+  "error": "免費方案未支援"
+ },
+ "ARM": {
+  "error": "免費方案未支援"
+ },
+ "PLTR": {
+  "price": 129.3,
+  "date": "2026-07-02",
+  "mas": [
+   {
+    "k": 5,
+    "label": "週線",
+    "v": 120.066,
+    "above": true,
+    "diff": 7.69,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 20,
+    "label": "月線",
+    "v": 125.9705,
+    "above": true,
+    "diff": 2.64,
+    "cross": "bull",
+    "near": false
+   },
+   {
+    "k": 60,
+    "label": "季線",
+    "v": 135.3293,
+    "above": false,
+    "diff": -4.46,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 240,
+    "label": "年線",
+    "v": 158.9085,
+    "above": false,
+    "diff": -18.63,
+    "cross": null,
+    "near": false
+   }
+  ],
+  "score": 2,
+  "valid": 4
+ },
+ "CRWD": {
+  "error": "免費方案未支援"
+ },
+ "NET": {
+  "error": "免費方案未支援"
+ },
+ "BRK-B": {
+  "error": "免費方案未支援"
+ },
+ "_updated": "2026-07-04T14:05:34Z"
+}
