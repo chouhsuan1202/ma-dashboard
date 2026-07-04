@@ -308,8 +308,11 @@ function renderMacro(){
 }
 
 /* ---------- 訊號（統計 holdings + watch 全部） ---------- */
-const HOLD_SET = new Set((WL.holdings||[]).map(h=>h.s));
-const HOLD_DN = new Map((WL.holdings||[]).map(h=>[h.s, h.dn||h.s]));
+let HOLD_SET = new Set(), HOLD_DN = new Map();
+function buildHoldMaps(){
+  HOLD_SET = new Set(((WL&&WL.holdings)||[]).map(h=>h.s));
+  HOLD_DN  = new Map(((WL&&WL.holdings)||[]).map(h=>[h.s, h.dn||h.s]));
+}
 function allTracked(){ return [...(WL.holdings||[]), ...(WL.watch||[])]; }
 function symLabel(s){ return HOLD_SET.has(s) ? `${HOLD_DN.get(s)}(持)` : s; }
 
@@ -684,6 +687,7 @@ Promise.all([
   fetch("lev.json?t="+Date.now()).then(r=>r.ok?r.json():null).catch(()=>null),
 ]).then(([wl,data,lev])=>{
   WL=wl; DATA=data; LEV_SNAPSHOT=(lev&&typeof lev==="object")?lev:null;
+  buildHoldMaps();
   document.getElementById("datadate").textContent=(DATA._updated||"").slice(0,10)||"—";
   document.getElementById("status").style.display="none";
   renderTopStrip();
