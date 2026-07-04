@@ -48,7 +48,8 @@ build_data.py                # 抓 FMP、算均線、寫 data.json
 ## 指數與免費方案
 
 FMP 免費方案對指數的支援不一致(實測:`^GSPC`、`^VIX` 可用;`^NDX`、`^SOX` 需付費方案)。
-`build_data.py` 會**自動 fallback**:指數抓不到時改抓對應 ETF,並在頁面標記「以 XXX 代替」。
+FMP 不支援的代碼(含多數指數與個股)會**自動改抓 Yahoo Finance**(chart API)作為第二資料源。
+若 Yahoo 也取不到,`build_data.py` 才會對指數**自動 fallback**:改抓對應 ETF,並在頁面標記「以 XXX 代替」。
 
 | 指數 | fallback ETF |
 |------|--------------|
