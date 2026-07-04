@@ -72,13 +72,6 @@
   .chip .cl{font-size:11px;color:var(--muted);margin-top:2px;}
   .chip.bull .n{color:var(--up);} .chip.bear .n{color:var(--dn);} .chip.na .n{color:var(--faint);}
 
-  /* view segmented control */
-  .seg{display:flex;gap:0;background:#eceef1;border:1px solid var(--line);border-radius:10px;
-    padding:3px;margin-bottom:12px;}
-  .seg button{flex:1;font-size:13px;font-weight:600;padding:7px 4px;border:none;background:transparent;
-    color:#374151;border-radius:8px;cursor:pointer;}
-  .seg button.active{background:var(--card);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08);}
-
   /* top strip: 今日均線訊號（單欄全寬） */
   .topstrip{margin-bottom:14px;}
   .topstrip .sig{margin-bottom:0;padding:10px 12px;}
@@ -263,18 +256,23 @@ function macroRuleHtml(){
 }
 function renderMacro(){
   const idx=(WL.indexes||[]);
+  const mh=(WL.market_holdings||[]);
+  const mhRows=mh.map(h=>stockRow(h.s, null, h.note, h.dn)).join("");
   document.getElementById("macro").innerHTML =
     `<div class="cards">${idx.map(indexCard).join("")}</div>` +
-    macroRuleHtml();
+    macroRuleHtml() +
+    `<div class="blk"><h2>我的大盤部位</h2>${mhRows}</div>`;
 }
 
-/* ---------- 訊號（統計 holdings + watch 全部） ---------- */
+/* ---------- 訊號（統計 market_holdings + holdings + watch 全部） ---------- */
+// 「(持)」與 dn 顯示涵蓋 market_holdings + holdings（兩清單合併建 SET / DN Map）
 let HOLD_SET = new Set(), HOLD_DN = new Map();
 function buildHoldMaps(){
-  HOLD_SET = new Set(((WL&&WL.holdings)||[]).map(h=>h.s));
-  HOLD_DN  = new Map(((WL&&WL.holdings)||[]).map(h=>[h.s, h.dn||h.s]));
+  const held = [...(((WL&&WL.market_holdings)||[])), ...(((WL&&WL.holdings)||[]))];
+  HOLD_SET = new Set(held.map(h=>h.s));
+  HOLD_DN  = new Map(held.map(h=>[h.s, h.dn||h.s]));
 }
-function allTracked(){ return [...(WL.holdings||[]), ...(WL.watch||[])]; }
+function allTracked(){ return [...(WL.market_holdings||[]), ...(WL.holdings||[]), ...(WL.watch||[])]; }
 function symLabel(s){ return HOLD_SET.has(s) ? `${HOLD_DN.get(s)}(持)` : s; }
 
 function crossSignals(){
@@ -331,10 +329,6 @@ function summaryHtml(list){
     <div class="chip na"><div class="n">${na}</div><div class="cl">無資料</div></div>
   </div>`;
 }
-function segHtml(opt, view){
-  return `<div class="seg">${opt.map(([v,t])=>
-    `<button data-view="${v}" class="${view===v?'active':''}">${t}</button>`).join("")}</div>`;
-}
 function detailHtml(r){
   const rows=[5,20,60,240].map(k=>{
     const m=maByK(r,k);
@@ -366,58 +360,21 @@ function stockRow(sym, group, note, dn){
     <div class="detail">${detailHtml(r)}</div>
   </div>`;
 }
-// 依強弱排序：score 降冪，同分按 240MA diff 降冪；無資料排最後
-function sortByStrength(list){
-  const scored=list.map(h=>{
-    const r=DATA[h.s];
-    const ok=r&&!r.error&&r.valid>0;
-    const m240=ok?maByK(r,240):null;
-    const diff=(m240&&m240.v!=null&&m240.diff!=null)?m240.diff:-Infinity;
-    return {h, ok, score:ok?r.score:-1, diff};
-  });
-  scored.sort((a,b)=>{
-    if(a.ok!==b.ok) return a.ok?-1:1;
-    if(b.score!==a.score) return b.score-a.score;
-    return b.diff-a.diff;
-  });
-  return scored.map(x=>x.h);
-}
-// 通用清單視圖：view = order | group | strength
-function listView(list, view, titles, subKey){
-  const rowOf=h=>stockRow(h.s, subKey==="group"?h.group:null, subKey==="note"?h.note:null, subKey==="note"?h.dn:null);
-  if(view==="group"){
-    const order=[]; const bucket=new Map();
-    list.forEach(h=>{ const g=h.group||"其他"; if(!bucket.has(g)){ bucket.set(g,[]); order.push(g);} bucket.get(g).push(h); });
-    let html=`<div class="blk"><h2>${titles.group}</h2>`;
-    order.forEach(g=>{
-      html+=`<div class="grphd">${g}</div>`;
-      html+=bucket.get(g).map(rowOf).join("");
-    });
-    return html+`</div>`;
-  }
-  const arr = (view==="strength") ? sortByStrength(list) : list;
-  const t = (view==="strength") ? titles.strength : titles.order;
-  return `<div class="blk"><h2>${t}</h2>${arr.map(rowOf).join("")}</div>`;
-}
-
-/* ---------- 持股分頁 ---------- */
-let STOCK_VIEW="order"; // order | strength
+/* ---------- 持股分頁（僅統計 holdings 20 檔，依 watchlist 權重順序） ---------- */
 function renderStocks(){
   const list=(WL.holdings||[]);
   let html=summaryHtml(list);
-  html+=segHtml([["order","權重順序"],["strength","依強弱"]], STOCK_VIEW);
-  html+=listView(list, STOCK_VIEW, {order:"持股(權重順序)", strength:"持股(依強弱)"}, "note");
+  const rowOf=h=>stockRow(h.s, null, h.note, h.dn);
+  html+=`<div class="blk"><h2>持股(權重順序)</h2>${list.map(rowOf).join("")}</div>`;
   document.getElementById("stocks").innerHTML=html;
 }
 
-/* ---------- 觀察清單分頁 ---------- */
-let WATCH_VIEW="order"; // order | group | strength
+/* ---------- 觀察清單分頁（清單順序，group 顯示在代號下方小字） ---------- */
 function renderWatch(){
   const list=(WL.watch||[]);
   let html=summaryHtml(list);
-  html+=segHtml([["order","清單順序"],["group","依分組"],["strength","依強弱"]], WATCH_VIEW);
-  html+=listView(list, WATCH_VIEW,
-    {order:"觀察清單(清單順序)", group:"觀察清單(依分組)", strength:"觀察清單(依強弱)"}, "group");
+  const rowOf=h=>stockRow(h.s, h.group, null, null);
+  html+=`<div class="blk"><h2>觀察清單</h2>${list.map(rowOf).join("")}</div>`;
   document.getElementById("watch").innerHTML=html;
 }
 
@@ -439,13 +396,6 @@ document.querySelectorAll(".tabs button").forEach(b=>{
   b.addEventListener("click",()=>switchTab(b.dataset.tab));
 });
 document.addEventListener("click",e=>{
-  const seg=e.target.closest(".seg button");
-  if(seg){
-    const inWatch = seg.closest("#watch");
-    if(inWatch){ WATCH_VIEW=seg.dataset.view; renderWatch(); }
-    else { STOCK_VIEW=seg.dataset.view; renderStocks(); }
-    return;
-  }
   const row=e.target.closest(".row[data-sym]");
   if(row) row.classList.toggle("open");
 });

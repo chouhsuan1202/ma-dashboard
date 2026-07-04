@@ -21,9 +21,10 @@ with open(os.path.join(HERE, "watchlist.json"), encoding="utf-8") as f:
 # 指數抓不到時的 ETF 代理。^VIX 沒有等比例 ETF,故不設代理(免費方案通常可直接取得)。
 INDEX_FALLBACK = {"^GSPC": "SPY", "^NDX": "QQQ", "^SOX": "SOXX", "^VIX": None}
 
-INDEXES  = list(WL.get("indexes", []))
-HOLDINGS = [h["s"] for h in WL.get("holdings", [])]
-WATCH    = [w["s"] for w in WL.get("watch", [])]
+INDEXES         = list(WL.get("indexes", []))
+MARKET_HOLDINGS = [h["s"] for h in WL.get("market_holdings", [])]
+HOLDINGS        = [h["s"] for h in WL.get("holdings", [])]
+WATCH           = [w["s"] for w in WL.get("watch", [])]
 
 # 需要向 FMP 抓的個股/ETF(指數另外處理,含 fallback)
 def _dedupe(seq):
@@ -33,7 +34,7 @@ def _dedupe(seq):
             seen.add(x); out.append(x)
     return out
 
-STOCK_SYMBOLS = _dedupe(HOLDINGS + WATCH)
+STOCK_SYMBOLS = _dedupe(MARKET_HOLDINGS + HOLDINGS + WATCH)
 # 對外公開的完整代碼清單(供檢查用)
 SYMBOLS = _dedupe(INDEXES + STOCK_SYMBOLS)
 
