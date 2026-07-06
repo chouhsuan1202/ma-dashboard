@@ -129,7 +129,7 @@
 <div class="wrap">
   <header>
     <h1>Market Compass</h1>
-    <div class="sub">多空羅盤 · 週線5/月線20/季線60/年線240MA · 資料更新至 <span id="datadate">—</span></div>
+    <div class="sub">資料更新至 <span id="datadate">—</span></div>
   </header>
 
   <div class="tabs">
@@ -232,21 +232,10 @@ function indexCard(sym){
     if(v>30){txt="警戒";col="var(--red)";}
     else if(v>=20){txt="偏高";col="var(--yellow)";}
     else {txt="平靜";col="var(--green)";}
-    // VIX 專屬解讀（語義與股票相反）
-    let vixIp="";
-    if(r.valid>0){
-      if(r.score===0) vixIp="低於所有均線,市場情緒平穩偏樂觀。";
-      else if(r.score===r.valid) vixIp="高於所有均線,避險情緒升溫,留意風險。";
-      else vixIp="波動情緒中性,觀察變化。";
-    }
-    const vixIpHtml=vixIp?`<div class="interp">↳ ${vixIp}</div>`:"";
     return `<div class="icard">
       <div class="top"><span class="short">${meta.short}</span><span class="full">${meta.full}</span></div>
       <div class="px">${px}</div>
       <div><span style="display:inline-block;margin-top:4px;font-size:13px;font-weight:800;color:#fff;padding:4px 12px;border-radius:8px;background:${col}">${txt}</span></div>
-      <div class="dots">${dotsHtml(r)}</div>
-      <span class="fb">情緒指標 · 非股票,不用於買賣</span>
-      ${vixIpHtml}
     </div>`;
   }
   const m240=maByK(r,240);
@@ -284,7 +273,7 @@ function macroLevel(){
   else if(a240===null){ level="gray"; msg="資料不足"; why=`NDX 年線資料尚未成形 ${vixNote}`; }
   else if(a240===false){ level="red"; msg="考慮降槓桿"; why=`NDX 跌破年線 240MA ${ndxTag} ${vixNote}`; }
   else if(a60===null){ level="gray"; msg="資料不足"; why=`NDX 季線資料不足 ${vixNote}`; }
-  else if(a60===true){ level="green"; msg="SXRV 槓桿:可維持"; why=`NDX 站上季線 60MA 與年線 240MA ${ndxTag} ${vixNote}`; }
+  else if(a60===true){ level="green"; msg="槓桿:可維持"; why=`NDX 站上季線 60MA 與年線 240MA ${ndxTag} ${vixNote}`; }
   else { level="yellow"; msg="不加碼"; why=`NDX 在年線上、但跌破季線 60MA ${ndxTag} ${vixNote}`; }
   why=why.replace(/\s+/g," ").trim();
   return {level,msg,why};
@@ -448,7 +437,12 @@ Promise.all([
 ]).then(([wl,data])=>{
   WL=wl; DATA=data;
   buildHoldMaps();
-  document.getElementById("datadate").textContent=(DATA._updated||"").slice(0,10)||"—";
+  document.getElementById("datadate").textContent=(function(u){
+    if(!u) return "—";
+    const d=new Date(u); if(isNaN(d)) return u.slice(0,10);
+    const p=n=>String(n).padStart(2,"0");
+    return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
+  })(DATA._updated);
   document.getElementById("status").style.display="none";
   renderTopStrip();
   renderMacro();
