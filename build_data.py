@@ -41,6 +41,11 @@ SYMBOLS = _dedupe(INDEXES + STOCK_SYMBOLS)
 MA_DEFS = [(5, "週線"), (20, "月線"), (60, "季線"), (240, "年線")]
 NEAR_PCT = 0.8                 # 接近閾值(%)
 NEAR_KS = (60, 240)            # 只有季線 / 年線會產生「接近」訊號
+
+# 需要輸出完整價格歷史序列(供前端點擊彈窗畫線圖)的代碼。
+# 先只做 TSM(台積電);之後要幫其他股票加線圖,把代碼加進這個集合即可。
+HIST_SYMBOLS = {"TSM", "SXRV.DE", "SEC0.DE", "0050.TW"}
+HIST_MAX_DAYS = 520            # 每檔最多保留幾個交易日的歷史(足夠「全部」約 2 年)
 BASE = "https://financialmodelingprep.com/stable/historical-price-eod/light"
 
 
@@ -179,10 +184,21 @@ def compute(dates, closes):
             "score": score, "valid": valid}
 
 
+def attach_hist(r, dates, closes):
+    """把價格歷史序列塞進結果(僅限 HIST_SYMBOLS),保留最後 HIST_MAX_DAYS 筆。
+    形狀:{"d": [日期...], "c": [收盤...]},兩陣列等長、依日期升冪。"""
+    d = dates[-HIST_MAX_DAYS:]
+    c = [round(float(x), 2) for x in closes[-HIST_MAX_DAYS:]]
+    r["hist"] = {"d": d, "c": c}
+    return r
+
+
 def build_stock(sym):
     dates, closes, provider = fetch_closes(sym)
     r = compute(dates, closes)
     r["provider"] = provider
+    if sym in HIST_SYMBOLS:
+        attach_hist(r, dates, closes)
     return r
 
 

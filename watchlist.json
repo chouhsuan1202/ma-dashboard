@@ -1,11 +1,12 @@
 {
   "indexes": ["^GSPC","^NDX","^SOX","^VIX"],
   "market_holdings": [
+    {"s":"SEC0.DE","dn":"SEC0","note":"iShares MSCI 全球半導體 · 歐元"},
     {"s":"006208.TW","dn":"富邦台50","note":""},
     {"s":"0050.TW","dn":"元大台灣50","note":""},
     {"s":"SPY","dn":"S&P500 ETF","note":"≈ Vanguard S&P500"},
     {"s":"EWT","dn":"台灣 ETF","note":"iShares MSCI Taiwan"},
-    {"s":"QQQ","dn":"SXRV","note":"NASDAQ 100 · 以 QQQ 估"},
+    {"s":"SXRV.DE","dn":"SXRV","note":"iShares NASDAQ 100 · 歐元"},
     {"s":"00646.TW","dn":"元大S&P500","note":""},
     {"s":"GLD","dn":"黃金","note":"Xetra+Invesco · 以 GLD 估"},
     {"s":"EWY","dn":"韓股 ETF","note":"iShares MSCI Korea"},

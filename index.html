@@ -12,6 +12,7 @@
     --dot-up:#10b981; --dot-dn:#ef4444; --dot-na:#cbd5e1;
     --green:#16a34a; --yellow:#f59e0b; --red:#dc2626;
     --nearbg:#fef3c7; --nearink:#92600a;
+    --cline:#e0653c;
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
   body{margin:0;background:var(--bg);color:var(--ink);
@@ -34,6 +35,7 @@
   .cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
   .icard{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 12px 11px;}
   .icard.span2{grid-column:1 / -1;}
+  .icard.clickable{cursor:pointer;}
   .fb.hold{color:#fff;background:var(--up);}
   .icard .top{display:flex;align-items:baseline;justify-content:space-between;gap:6px;}
   .icard .short{font-size:16px;font-weight:800;}
@@ -89,6 +91,11 @@
   .tag.n{background:var(--nearbg);color:var(--nearink);}
   .sigtxt{font-size:14px;}
   .noneline{color:var(--muted);font-size:14px;}
+  .vixnote{display:flex;align-items:center;gap:8px;margin-top:9px;padding-top:9px;
+    border-top:1px dashed var(--line);font-size:12.5px;color:var(--muted);}
+  .vixnote .vixk{font-weight:600;}
+  .vixnote b{font-variant-numeric:tabular-nums;font-size:14px;color:var(--ink);}
+  .vixtag{color:#fff;font-weight:800;font-size:11px;padding:2px 9px;border-radius:7px;}
 
   /* stock list */
   .blk{margin-bottom:16px;}
@@ -123,6 +130,44 @@
   .caret{font-size:11px;color:var(--faint);margin-left:2px;}
 
   footer{color:var(--muted);font-size:12px;margin-top:22px;text-align:center;line-height:1.6;}
+
+  /* ---------- 點擊彈窗:走勢線圖 ---------- */
+  .modal{position:fixed;inset:0;z-index:100;display:none;align-items:flex-end;justify-content:center;
+    background:rgba(20,22,28,.45);}
+  .modal.show{display:flex;}
+  .sheet{background:var(--card);width:100%;max-width:680px;max-height:92vh;overflow-y:auto;
+    border-radius:18px 18px 0 0;padding:16px 16px calc(20px + env(safe-area-inset-bottom));
+    box-shadow:0 -8px 40px rgba(0,0,0,.22);}
+  @media(min-width:560px){ .modal{align-items:center;} .sheet{border-radius:18px;} }
+  .shead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:4px;}
+  .shead .stitle{font-size:17px;font-weight:800;line-height:1.2;}
+  .shead .ssub{font-size:11px;color:var(--faint);margin-top:3px;}
+  .shead .rt{text-align:right;display:flex;align-items:flex-start;gap:10px;}
+  .shead .sprice{font-size:22px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.1;}
+  .shead .schg{font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;margin-top:2px;}
+  .schg.up{color:var(--up);} .schg.dn{color:var(--dn);}
+  .sclose{border:none;background:#eceef1;color:var(--ink);width:30px;height:30px;border-radius:50%;
+    font-size:16px;line-height:1;cursor:pointer;flex:none;}
+  .chartbox{margin:10px 0 0;}
+  .chartbox svg{width:100%;height:auto;display:block;}
+  .cline{fill:none;stroke:var(--cline);stroke-width:2;stroke-linejoin:round;stroke-linecap:round;}
+  .carea{fill:url(#cgrad);stroke:none;}
+  .cdot{fill:var(--cline);}
+  .clabel{font-size:10.5px;fill:var(--faint);font-variant-numeric:tabular-nums;}
+  .cnodata{padding:44px 0;text-align:center;color:var(--muted);}
+  .cdates{display:flex;justify-content:space-between;font-size:10.5px;color:var(--faint);margin-top:3px;}
+  .segs{display:flex;gap:10px;justify-content:space-between;margin:12px 0 2px;flex-wrap:wrap;}
+  .segrow{display:flex;gap:4px;background:#eceef1;border-radius:10px;padding:3px;}
+  .segrow button{border:none;background:transparent;color:var(--muted);font-size:12.5px;font-weight:600;
+    padding:6px 12px;border-radius:8px;cursor:pointer;}
+  .segrow button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.10);}
+  .macards{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px;}
+  .mac{border-radius:12px;padding:12px 4px;text-align:center;background:var(--bg);}
+  .mac.up{background:var(--upbg);} .mac.dn{background:var(--dnbg);}
+  .mac .macv{font-size:15px;font-weight:800;font-variant-numeric:tabular-nums;}
+  .mac.up .macv{color:var(--up);} .mac.dn .macv{color:var(--dn);} .mac.na .macv{color:var(--faint);}
+  .mac .macl{font-size:11px;color:var(--muted);margin-top:5px;}
+  .sinterp{font-size:12.5px;color:var(--muted);margin-top:14px;line-height:1.5;}
 </style>
 </head>
 <body>
@@ -147,6 +192,8 @@
 
   <footer>Designed by Hsuan x her AI bestie</footer>
 </div>
+
+<div id="chartModal" class="modal"><div class="sheet" id="chartSheet"></div></div>
 
 <script>
 const IDX_META = {
@@ -191,12 +238,17 @@ function interpret(r){
 }
 
 /* ---------- macro tab ---------- */
-// SXRV 大卡（大盤分頁最頂，全寬），資料用 DATA["QQQ"]（QQQ 為 SXRV 追蹤代理）
-function sxrvCard(){
-  const r=DATA["QQQ"];
+// 大盤分頁最頂的「持有大卡」（全寬,可點開彈窗）。SXRV、SEC0 等歐元 ETF 都用這個。
+const BIG_HOLD_CARDS = ["SXRV.DE", "SEC0.DE"];   // 依序渲染在大盤分頁最頂
+function bigHoldCard(sym){
+  const r=DATA[sym];
+  const e=(typeof wlEntry==="function")?wlEntry(sym):{s:sym};
+  const short=e.dn||sym;
+  const cur=(r&&r.currency)||"";
+  const full=e.note||"";
   if(!r||r.error){
     return `<div class="icard span2">
-      <div class="top"><span class="short">SXRV</span><span class="full">iShares NASDAQ 100 · 以 QQQ 估</span></div>
+      <div class="top"><span class="short">${short}</span><span class="full">${full}</span></div>
       <div class="naidx">${(r&&r.error)||"無資料"}</div></div>`;
   }
   const px=r.price!=null?r.price.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}):"—";
@@ -209,9 +261,11 @@ function sxrvCard(){
   const pillBg=(X===Y)?"var(--green)":(X===0)?"var(--red)":"var(--yellow)";
   const pillHtml=`<span class="mapill" style="background:${pillBg}">站上 ${X}/${Y} 均線</span>`;
   const holdTag=`<span class="fb hold">持有</span>`;
-  return `<div class="icard span2">
-    <div class="top"><span class="short">SXRV</span><span class="full">iShares NASDAQ 100 · 以 QQQ 估 ${holdTag}</span></div>
-    <div class="px">${px}</div>
+  const clickable=(r.hist)?` clickable" data-sym="${sym}`:'';
+  const curHtml=cur?` <span style="font-size:12px;color:var(--faint);font-weight:600">${cur}</span>`:'';
+  return `<div class="icard span2${clickable}">
+    <div class="top"><span class="short">${short}${r.hist?' <span class="caret">▾</span>':''}</span><span class="full">${full} ${holdTag}</span></div>
+    <div class="px">${px}${curHtml}</div>
     <div>${yr}</div>
     <div class="dots">${dotsHtml(r)}</div>
     <div class="foot">${pillHtml}</div>
@@ -286,10 +340,11 @@ function macroRuleHtml(){
 function renderMacro(){
   const idx=(WL.indexes||[]);
   const mh=(WL.market_holdings||[]);
-  // 清單跳過 QQQ（SXRV 已有大卡）
-  const mhRows=mh.filter(h=>h.s!=="QQQ").map(h=>stockRow(h.s, null, h.note, h.dn)).join("");
+  // 清單跳過已有持有大卡的標的（SXRV.DE、SEC0.DE…）
+  const mhRows=mh.filter(h=>!BIG_HOLD_CARDS.includes(h.s)).map(h=>stockRow(h.s, null, h.note, h.dn)).join("");
+  const bigCards=BIG_HOLD_CARDS.filter(s=>DATA[s]).map(bigHoldCard).join("");
   document.getElementById("macro").innerHTML =
-    `<div class="cards">${sxrvCard()}${idx.map(indexCard).join("")}</div>` +
+    `<div class="cards">${bigCards}${idx.filter(s=>s!=="^VIX").map(indexCard).join("")}</div>` +
     macroRuleHtml() +
     `<div class="blk"><h2>我的大盤部位</h2>${mhRows}</div>`;
 }
@@ -328,17 +383,32 @@ function mergeSym(arr){
   arr.forEach(x=>{ if(!map.has(x.s)) map.set(x.s,[]); map.get(x.s).push(x.l.replace("線","")); });
   return [...map.entries()].map(([s,ls])=>`${symLabel(s)} ${ls.join("/")}線`);
 }
+function vixNoteHtml(){
+  const v=DATA["^VIX"];
+  let val="無資料", txt="", col="var(--faint)";
+  if(v&&!v.error&&v.price!=null){
+    const p=v.price; val=p.toFixed(1);
+    if(p>30){txt="警戒";col="var(--red)";}
+    else if(p>=20){txt="偏高";col="var(--yellow)";}
+    else {txt="平靜";col="var(--green)";}
+  }
+  const tag=txt?`<span class="vixtag" style="background:${col}">${txt}</span>`:"";
+  return `<div class="vixnote"><span class="vixk">◷ VIX 恐慌溫度計</span><b>${val}</b>${tag}</div>`;
+}
 function signalsHtml(){
   const {bull,bear}=crossSignals();
   const near=nearSignals();
   let h=`<div class="sig"><h3>今日均線訊號</h3>`;
-  if(!bull.length&&!bear.length&&!near.length){ return h+`<div class="noneline">今日無訊號</div></div>`; }
-  if(bull.length) h+=`<div class="sigrow"><span class="tag b">站上 ↑</span><span class="sigtxt">${mergeSym(bull).join("、")}</span></div>`;
-  if(bear.length) h+=`<div class="sigrow"><span class="tag s">跌破 ↓</span><span class="sigtxt">${mergeSym(bear).join("、")}</span></div>`;
-  if(near.length){
-    const txt=near.map(x=>`${symLabel(x.s)}(${x.lbl})`).join("、");
-    h+=`<div class="sigrow"><span class="tag n">接近</span><span class="sigtxt">${txt}</span></div>`;
+  if(!bull.length&&!bear.length&&!near.length){ h+=`<div class="noneline">今日無訊號</div>`; }
+  else {
+    if(bull.length) h+=`<div class="sigrow"><span class="tag b">站上 ↑</span><span class="sigtxt">${mergeSym(bull).join("、")}</span></div>`;
+    if(bear.length) h+=`<div class="sigrow"><span class="tag s">跌破 ↓</span><span class="sigtxt">${mergeSym(bear).join("、")}</span></div>`;
+    if(near.length){
+      const txt=near.map(x=>`${symLabel(x.s)}(${x.lbl})`).join("、");
+      h+=`<div class="sigrow"><span class="tag n">接近</span><span class="sigtxt">${txt}</span></div>`;
+    }
   }
+  h+=vixNoteHtml();
   return h+`</div>`;
 }
 
@@ -421,14 +491,133 @@ function switchTab(t){
   document.getElementById("watch").hidden  = t!=="watch";
 }
 
+/* ---------- 點擊彈窗:走勢線圖 ---------- */
+const RANGE_PTS={ "3M":63, "6M":126, "1Y":252, "ALL":1e9 };
+const RANGE_LBL={ "3M":"3月", "6M":"6月", "1Y":"1年", "ALL":"全部" };
+let CHART={ sym:null, range:"6M", intv:"D" };
+
+// 從 watchlist 找顯示名 / 說明
+function wlEntry(sym){
+  return [...(WL.market_holdings||[]), ...(WL.holdings||[]), ...(WL.watch||[])].find(h=>h.s===sym) || {s:sym};
+}
+// ISO 週鍵值(週線降採樣用)
+function wkKey(iso){
+  const dt=new Date(iso+"T00:00:00Z"); const day=(dt.getUTCDay()+6)%7;
+  dt.setUTCDate(dt.getUTCDate()-day+3);
+  const firstThu=new Date(Date.UTC(dt.getUTCFullYear(),0,4));
+  return dt.getUTCFullYear()*100 + (1+Math.round((dt-firstThu)/(7*864e5)));
+}
+// 依區間取尾段,週線再降採樣(每週取最後一筆)
+function slice(hist){
+  const n=hist.c.length, k=Math.min(n, RANGE_PTS[CHART.range]);
+  let d=hist.d.slice(n-k), c=hist.c.slice(n-k);
+  if(CHART.intv==="W"){
+    const od=[], oc=[]; let key=null;
+    for(let i=0;i<d.length;i++){ const w=wkKey(d[i]);
+      if(w!==key){ od.push(d[i]); oc.push(c[i]); key=w; }
+      else { od[od.length-1]=d[i]; oc[oc.length-1]=c[i]; } }
+    d=od; c=oc;
+  }
+  return {d,c};
+}
+function fmtDate(iso){ const p=iso.split("-"); return `${p[0]}/${p[1]}/${p[2]}`; }
+function num(v,dp){ return v.toLocaleString(undefined,{minimumFractionDigits:dp,maximumFractionDigits:dp}); }
+
+function chartSVG(d,c){
+  const W=680,H=250,pT=18,pB=16,pL=6,pR=6;
+  const n=c.length;
+  if(n<2) return `<div class="cnodata">此區間資料不足</div>`;
+  let min=Math.min(...c), max=Math.max(...c), span=(max-min)||1;
+  const minI=c.indexOf(min), maxI=c.indexOf(max);
+  const X=i=> pL + i*(W-pL-pR)/(n-1);
+  const Y=v=> pT + (1-(v-min)/span)*(H-pT-pB);
+  const pts=c.map((v,i)=>`${X(i).toFixed(1)} ${Y(v).toFixed(1)}`);
+  const line="M"+pts.join(" L");
+  const area=`M${X(0).toFixed(1)} ${(H-pB).toFixed(1)} L`+pts.join(" L")+` L${X(n-1).toFixed(1)} ${(H-pB).toFixed(1)} Z`;
+  const anchor=x=> x<70?"start":(x>W-70?"end":"middle");
+  const lbl=(i,v,below)=>{
+    const x=X(i), y=Y(v); const ty=below? y+13 : y-6;
+    return `<text class="clabel" x="${x.toFixed(1)}" y="${ty.toFixed(1)}" text-anchor="${anchor(x)}">${num(v,2)}</text>`;
+  };
+  return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">
+    <defs><linearGradient id="cgrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="var(--cline)" stop-opacity="0.16"/>
+      <stop offset="1" stop-color="var(--cline)" stop-opacity="0"/></linearGradient></defs>
+    <path class="carea" d="${area}"/>
+    <path class="cline" d="${line}"/>
+    <circle class="cdot" cx="${X(n-1).toFixed(1)}" cy="${Y(c[n-1]).toFixed(1)}" r="3.2"/>
+    ${lbl(maxI,max,false)}${lbl(minI,min,true)}
+  </svg>`;
+}
+
+function maCardsHTML(r){
+  const lab={5:"週5",20:"月20",60:"季60",240:"年240"};
+  return `<div class="macards">`+[5,20,60,240].map(k=>{
+    const m=maByK(r,k);
+    if(!m||m.v==null) return `<div class="mac na"><div class="macv">—</div><div class="macl">${lab[k]}</div></div>`;
+    const cls=m.above?"up":"dn", s=m.diff>=0?"+":"", arw=m.above?"":" ↓";
+    return `<div class="mac ${cls}"><div class="macv">${s}${m.diff.toFixed(1)}%${arw}</div><div class="macl">${lab[k]}</div></div>`;
+  }).join("")+`</div>`;
+}
+
+function renderChart(){
+  const sym=CHART.sym, r=DATA[sym]; if(!r||!r.hist) return;
+  const e=wlEntry(sym);
+  const title=e.dn||sym;
+  const sub=[sym.replace(/\.(TW|TWO)$/,""), e.note].filter(Boolean).join(" · ");
+  const {d,c}=slice(r.hist);
+  const last=c[c.length-1], prev=c.length>1?c[c.length-2]:last;
+  const chg=(last/prev-1)*100, cCls=chg>=0?"up":"dn", cS=chg>=0?"+":"";
+  const seg=(group,val,map)=>`<div class="segrow">`+Object.keys(map).map(kk=>
+      `<button data-${group}="${kk}" class="${CHART[group==='range'?'range':'intv']===kk?'on':''}">${map[kk]}</button>`).join("")+`</div>`;
+  const segs=`<div class="segs">
+      ${seg("range",CHART.range,RANGE_LBL)}
+      ${seg("intv",CHART.intv,{D:"日線",W:"週線"})}
+    </div>`;
+  const ip=interpret(r); const ipHtml=ip?`<div class="sinterp">↳ ${ip} &nbsp;${r.score}/${r.valid}</div>`:"";
+  document.getElementById("chartSheet").innerHTML=
+    `<div class="shead">
+       <div><div class="stitle">${title}</div><div class="ssub">${sub}</div></div>
+       <div class="rt"><div>
+         <div class="sprice">${num(last,2)}</div>
+         <div class="schg ${cCls}">${cS}${chg.toFixed(2)}%</div>
+       </div><button class="sclose" id="chartClose" aria-label="關閉">✕</button></div>
+     </div>
+     <div class="chartbox">${chartSVG(d,c)}</div>
+     <div class="cdates"><span>${d.length?fmtDate(d[0]):""}</span><span>${d.length?fmtDate(d[d.length-1]):""}</span></div>
+     ${segs}
+     ${maCardsHTML(r)}
+     ${ipHtml}`;
+}
+function openChart(sym){
+  CHART={ sym, range:"6M", intv:"D" };
+  renderChart();
+  document.getElementById("chartModal").classList.add("show");
+}
+function closeChart(){ document.getElementById("chartModal").classList.remove("show"); }
+
 /* ---------- interactions ---------- */
 document.querySelectorAll(".tabs button").forEach(b=>{
   b.addEventListener("click",()=>switchTab(b.dataset.tab));
 });
 document.addEventListener("click",e=>{
-  const row=e.target.closest(".row[data-sym]");
-  if(row) row.classList.toggle("open");
+  // 彈窗內互動
+  if(e.target.closest("#chartSheet")){
+    const rb=e.target.closest("[data-range]"); if(rb){ CHART.range=rb.dataset.range; renderChart(); return; }
+    const ib=e.target.closest("[data-intv]");  if(ib){ CHART.intv=ib.dataset.intv;  renderChart(); return; }
+    if(e.target.closest("#chartClose")){ closeChart(); return; }
+    return; // 點 sheet 內其他區域不關閉
+  }
+  if(e.target.closest("#chartModal")){ closeChart(); return; } // 點背景關閉
+  // 有歷史序列的(股票列或大盤卡)開彈窗線圖,其餘股票列沿用行內展開
+  const el=e.target.closest("[data-sym]");
+  if(el){
+    const sym=el.dataset.sym;
+    if(DATA && DATA[sym] && DATA[sym].hist){ openChart(sym); return; }
+    if(el.classList.contains("row")) el.classList.toggle("open");
+  }
 });
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") closeChart(); });
 
 /* ---------- load（讀取 watchlist.json / data.json） ---------- */
 Promise.all([
