@@ -3,7 +3,12 @@ name: Update MA data
 on:
   schedule:
     - cron: "30 22 * * 1-5"   # 週一到五 22:30 UTC(美股收盤後)
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      test_email:
+        description: "寄一封測試信確認警示設定"
+        type: boolean
+        default: false
   push:
     branches: [ main ]
     paths:                     # 只在會影響資料的檔案變動時才重抓,省 FMP 額度
@@ -39,6 +44,8 @@ jobs:
       # 檢查 SXRV/SEC0 今天是否跌破季線(60MA bear cross)
       - name: Check MA alerts
         id: alerts
+        env:
+          FORCE_ALERT: ${{ github.event.inputs.test_email }}
         run: python alerts.py
 
       # 有跌破才寄信。需在 repo Settings → Secrets 設定 MAIL_USERNAME / MAIL_PASSWORD

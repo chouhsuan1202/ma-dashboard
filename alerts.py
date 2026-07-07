@@ -50,7 +50,20 @@ def emit(**kv):
                 f.write(f"{k}={v}\n")
 
 
-if hits:
+# FORCE_ALERT=1（由 workflow 的 test_email 輸入帶入）時,寄一封測試信確認設定正常
+FORCE = os.environ.get("FORCE_ALERT", "").lower() in ("1", "true", "yes")
+
+if FORCE:
+    subject = "✅ 測試信:MA Dashboard 均線警示設定正常"
+    body = (
+        "這是一封測試信。你收到它,代表 GitHub Actions 的寄信設定"
+        "(SMTP 帳號 / 應用程式密碼)正常運作。\n\n"
+        "真正的季線(60MA)跌破警示,會在 SXRV 或 SEC0 跌破當天自動寄出。\n"
+        "看板:https://chouhsuan1202.github.io/ma-dashboard/"
+    )
+    print("FORCE test email.")
+    emit(triggered="true", subject=subject, body=body)
+elif hits:
     names = ", ".join(h.split(" (")[0] for h in hits)
     subject = f"⚠️ 均線警示:{names} 跌破{ALERT_LABEL}"
     body = (
