@@ -3,6 +3,7 @@
   "market_holdings": [
     {"s":"SEC0.DE","dn":"SEC0","note":"iShares MSCI 全球半導體 · 歐元"},
     {"s":"SXRV.DE","dn":"SXRV","note":"iShares NASDAQ 100 · 歐元"},
+    {"s":"SXR8.DE","dn":"SXR8","note":"iShares Core S&P 500 · 歐元"},
     {"s":"GLD","dn":"黃金","note":"Xetra-Gold 4GLD · 以 GLD 估"},
     {"s":"0050.TW","dn":"元大台灣50","note":""},
     {"s":"006208.TW","dn":"富邦台50","note":""},

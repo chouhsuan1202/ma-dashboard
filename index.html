@@ -253,7 +253,7 @@ function interpret(r){
 
 /* ---------- macro tab ---------- */
 // 大盤分頁最頂的「持有大卡」（全寬,可點開彈窗）。SXRV、SEC0 等歐元 ETF 都用這個。
-const BIG_HOLD_CARDS = ["SXRV.DE", "SEC0.DE"];   // 依序渲染在大盤分頁最頂
+const BIG_HOLD_CARDS = ["SXRV.DE", "SEC0.DE", "SXR8.DE"];   // 依序渲染在大盤分頁最頂
 function bigHoldCard(sym){
   const r=DATA[sym];
   const e=(typeof wlEntry==="function")?wlEntry(sym):{s:sym};
