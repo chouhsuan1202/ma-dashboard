@@ -351,14 +351,16 @@ function macroRuleHtml(){
 }
 function renderMacro(){
   const mh=(WL.market_holdings||[]);
-  // 清單跳過已有持有大卡的標的（SXRV.DE、SEC0.DE…）
-  const mhRows=mh.filter(h=>!BIG_HOLD_CARDS.includes(h.s)).map(h=>stockRow(h.s, null, h.note, h.dn)).join("");
+  // 依帳戶分區:.TW 結尾歸台灣,其餘歸 IB(歐股)。大卡(SXRV/SEC0)固定在 IB 區最頂
+  const isTW=s=>s.endsWith(".TW");
+  const ibRows=mh.filter(h=>!BIG_HOLD_CARDS.includes(h.s)&&!isTW(h.s)).map(h=>stockRow(h.s, null, h.note, h.dn)).join("");
+  const twRows=mh.filter(h=>isTW(h.s)).map(h=>stockRow(h.s, null, h.note, h.dn)).join("");
   const bigCards=BIG_HOLD_CARDS.filter(s=>DATA[s]).map(bigHoldCard).join("");
-  // 指數卡(SPX/NDX/SOX)不再顯示:大盤分頁只放實際持有;NDX/VIX 數據仍供紅綠燈判斷用
+  // 紅綠燈跟著 IB 區走(NDX 槓桿判斷);指數卡不顯示,NDX/VIX 數據仍供紅綠燈用
   document.getElementById("macro").innerHTML =
-    `<div class="cards">${bigCards}</div>` +
+    `<div class="blk"><h2>IB 帳戶 · 歐股</h2><div class="cards">${bigCards}</div>${ibRows}</div>` +
     macroRuleHtml() +
-    `<div class="blk"><h2>我的大盤部位</h2>${mhRows}</div>`;
+    `<div class="blk"><h2>台灣大盤</h2>${twRows}</div>`;
 }
 
 /* ---------- 訊號（統計 market_holdings + holdings + watch 全部） ---------- */
