@@ -19,8 +19,15 @@
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang TC","Microsoft JhengHei",sans-serif;
     font-size:15px;line-height:1.45;}
   .wrap{max-width:680px;margin:0 auto;padding:14px 12px calc(28px + env(safe-area-inset-bottom));}
+  header{display:flex;justify-content:space-between;align-items:flex-start;}
   header h1{font-size:19px;margin:0 0 2px;}
   .sub{color:var(--muted);font-size:12px;margin-bottom:12px;}
+  .refresh{border:1px solid var(--line);background:var(--card);color:var(--muted);
+    width:34px;height:34px;border-radius:50%;font-size:17px;line-height:1;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;flex:none;margin-top:2px;}
+  .refresh:active{background:var(--line);}
+  .refresh.spinning svg{animation:spin .8s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
 
   /* top tabs */
   .tabs{position:sticky;top:0;z-index:10;display:flex;gap:6px;background:var(--bg);
@@ -173,8 +180,13 @@
 <body>
 <div class="wrap">
   <header>
-    <h1>Market Compass</h1>
-    <div class="sub">資料更新至 <span id="datadate">—</span></div>
+    <div>
+      <h1>Market Compass</h1>
+      <div class="sub">資料更新至 <span id="datadate">—</span></div>
+    </div>
+    <button id="refreshBtn" class="refresh" aria-label="重新整理" title="重新整理">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><polyline points="21 3 21 9 15 9"/></svg>
+    </button>
   </header>
 
   <div class="tabs">
@@ -619,27 +631,35 @@ document.addEventListener("click",e=>{
 });
 document.addEventListener("keydown",e=>{ if(e.key==="Escape") closeChart(); });
 
-/* ---------- load（讀取 watchlist.json / data.json） ---------- */
-Promise.all([
-  fetch("watchlist.json?t="+Date.now()).then(r=>r.json()),
-  fetch("data.json?t="+Date.now()).then(r=>r.json()),
-]).then(([wl,data])=>{
-  WL=wl; DATA=data;
-  buildHoldMaps();
-  document.getElementById("datadate").textContent=(function(u){
-    if(!u) return "—";
-    const d=new Date(u); if(isNaN(d)) return u.slice(0,10);
-    const p=n=>String(n).padStart(2,"0");
-    return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
-  })(DATA._updated);
-  document.getElementById("status").style.display="none";
-  renderTopStrip();
-  renderMacro();
-  renderStocks();
-  renderWatch();
-}).catch(e=>{
-  document.getElementById("status").innerHTML='<span class="nd">尚無資料,等待首次自動更新完成。</span>';
-});
+/* ---------- load（讀取 watchlist.json / data.json,refresh 按鈕重抓同一流程） ---------- */
+const refreshBtn=document.getElementById("refreshBtn");
+function loadData(){
+  refreshBtn.classList.add("spinning");
+  return Promise.all([
+    fetch("watchlist.json?t="+Date.now()).then(r=>r.json()),
+    fetch("data.json?t="+Date.now()).then(r=>r.json()),
+  ]).then(([wl,data])=>{
+    WL=wl; DATA=data;
+    buildHoldMaps();
+    document.getElementById("datadate").textContent=(function(u){
+      if(!u) return "—";
+      const d=new Date(u); if(isNaN(d)) return u.slice(0,10);
+      const p=n=>String(n).padStart(2,"0");
+      return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
+    })(DATA._updated);
+    document.getElementById("status").style.display="none";
+    renderTopStrip();
+    renderMacro();
+    renderStocks();
+    renderWatch();
+  }).catch(e=>{
+    if(!DATA) document.getElementById("status").innerHTML='<span class="nd">尚無資料,等待首次自動更新完成。</span>';
+  }).finally(()=>{
+    refreshBtn.classList.remove("spinning");
+  });
+}
+refreshBtn.addEventListener("click",loadData);
+loadData();
 </script>
 </body>
 </html>
