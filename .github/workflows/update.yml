@@ -4,17 +4,11 @@ on:
   schedule:
     - cron: "30 22 * * 1-5"   # 週一到五 22:30 UTC(美股收盤後)
   workflow_dispatch:
-    inputs:
-      test_email:
-        description: "寄一封測試信確認警示設定"
-        type: boolean
-        default: false
   push:
     branches: [ main ]
     paths:                     # 只在會影響資料的檔案變動時才重抓,省 FMP 額度
       - watchlist.json
       - build_data.py
-      - alerts.py
       - .github/workflows/update.yml
 
 permissions:
@@ -27,8 +21,6 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}   # 供寄信條件判斷用(未設定則略過寄信)
     steps:
       - uses: actions/checkout@v4
 
@@ -40,29 +32,6 @@ jobs:
         env:
           FMP_API_KEY: ${{ secrets.FMP_API_KEY }}
         run: python build_data.py
-
-      # 檢查 SXRV/SEC0 今天是否跌破季線(60MA bear cross)
-      - name: Check MA alerts
-        id: alerts
-        env:
-          FORCE_ALERT: ${{ github.event.inputs.test_email }}
-        run: python alerts.py
-
-      # 有跌破才寄信。需在 repo Settings → Secrets 設定 MAIL_USERNAME / MAIL_PASSWORD
-      # (Gmail 帳號 + 應用程式密碼)。未設定時此步驟會略過,不影響資料更新。
-      - name: Send alert email
-        if: steps.alerts.outputs.triggered == 'true' && env.MAIL_USERNAME != ''
-        uses: dawidd6/action-send-mail@v3
-        with:
-          server_address: smtp.gmail.com
-          server_port: 465
-          secure: true
-          username: ${{ secrets.MAIL_USERNAME }}
-          password: ${{ secrets.MAIL_PASSWORD }}
-          from: MA Dashboard <${{ secrets.MAIL_USERNAME }}>
-          to: chouhsuan1202@gmail.com
-          subject: ${{ steps.alerts.outputs.subject }}
-          body: ${{ steps.alerts.outputs.body }}
 
       - name: Commit data.json
         run: |
