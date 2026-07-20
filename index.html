@@ -274,11 +274,11 @@ function bigHoldCard(sym){
   const X=r.score, Y=r.valid;
   const pillBg=(X===Y)?"var(--green)":(X===0)?"var(--red)":"var(--yellow)";
   const pillHtml=`<span class="mapill" style="background:${pillBg}">站上 ${X}/${Y} 均線</span>`;
-  const holdTag=`<span class="fb hold">持有</span>`;
+  // 大盤分頁的卡片一定是持有部位,不再標「持有」標籤
   const clickable=(r.hist)?` clickable" data-sym="${sym}`:'';
   const curHtml=cur?` <span style="font-size:12px;color:var(--faint);font-weight:600">${cur}</span>`:'';
   return `<div class="icard span2${clickable}">
-    <div class="top"><span class="short">${short}${r.hist?' <span class="caret">▾</span>':''}</span><span class="full">${full} ${holdTag}</span></div>
+    <div class="top"><span class="short">${short}${r.hist?' <span class="caret">▾</span>':''}</span><span class="full">${full}</span></div>
     <div class="mid">
       <div><div class="px">${px}${curHtml}</div><div>${yr}</div></div>
       <div class="rcol"><div class="dots">${dotsHtml(r)}</div>${pillHtml}</div>
