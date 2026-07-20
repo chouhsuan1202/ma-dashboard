@@ -188,42 +188,42 @@
   "provider": "fmp"
  },
  "SEC0.DE": {
-  "price": 17.28,
+  "price": 17.3,
   "date": "2026-07-20",
   "mas": [
    {
     "k": 5,
     "label": "週線",
-    "v": 17.7268,
+    "v": 17.7308,
     "above": false,
-    "diff": -2.52,
+    "diff": -2.43,
     "cross": null,
     "near": false
    },
    {
     "k": 20,
     "label": "月線",
-    "v": 18.987,
+    "v": 18.988,
     "above": false,
-    "diff": -8.99,
+    "diff": -8.89,
     "cross": null,
     "near": false
    },
    {
     "k": 60,
     "label": "季線",
-    "v": 17.9407,
+    "v": 17.941,
     "above": false,
-    "diff": -3.68,
+    "diff": -3.57,
     "cross": null,
     "near": false
    },
    {
     "k": 240,
     "label": "年線",
-    "v": 11.7835,
+    "v": 11.7836,
     "above": true,
-    "diff": 46.65,
+    "diff": 46.81,
     "cross": null,
     "near": false
    }
@@ -1240,47 +1240,47 @@
     18.13,
     17.59,
     16.92,
-    17.28
+    17.3
    ]
   }
  },
  "SXRV.DE": {
-  "price": 1446.4,
+  "price": 1447.8,
   "date": "2026-07-20",
   "mas": [
    {
     "k": 5,
     "label": "週線",
-    "v": 1462.72,
+    "v": 1463.0,
     "above": false,
-    "diff": -1.12,
+    "diff": -1.04,
     "cross": null,
     "near": false
    },
    {
     "k": 20,
     "label": "月線",
-    "v": 1480.95,
+    "v": 1481.02,
     "above": false,
-    "diff": -2.33,
+    "diff": -2.24,
     "cross": null,
     "near": false
    },
    {
     "k": 60,
     "label": "季線",
-    "v": 1457.4633,
+    "v": 1457.4867,
     "above": false,
-    "diff": -0.76,
+    "diff": -0.66,
     "cross": null,
     "near": true
    },
    {
     "k": 240,
     "label": "年線",
-    "v": 1277.7917,
+    "v": 1277.7975,
     "above": true,
-    "diff": 13.2,
+    "diff": 13.3,
     "cross": null,
     "near": false
    }
@@ -2287,47 +2287,47 @@
     1476.8,
     1467.8,
     1434.4,
-    1446.4
+    1447.8
    ]
   }
  },
  "SXR8.DE": {
-  "price": 705.12,
+  "price": 705.32,
   "date": "2026-07-20",
   "mas": [
    {
     "k": 5,
     "label": "週線",
-    "v": 708.432,
+    "v": 708.472,
     "above": false,
-    "diff": -0.47,
+    "diff": -0.44,
     "cross": null,
     "near": false
    },
    {
     "k": 20,
     "label": "月線",
-    "v": 705.66,
+    "v": 705.67,
     "above": false,
-    "diff": -0.08,
+    "diff": -0.05,
     "cross": null,
     "near": false
    },
    {
     "k": 60,
     "label": "季線",
-    "v": 692.527,
+    "v": 692.5303,
     "above": true,
-    "diff": 1.82,
+    "diff": 1.85,
     "cross": null,
     "near": false
    },
    {
     "k": 240,
     "label": "年線",
-    "v": 636.7074,
+    "v": 636.7083,
     "above": true,
-    "diff": 10.74,
+    "diff": 10.78,
     "cross": null,
     "near": false
    }
@@ -3344,7 +3344,7 @@
     711.62,
     711.96,
     703.46,
-    705.12
+    705.32
    ]
   }
  },
@@ -6152,5 +6152,50 @@
   "valid": 4,
   "provider": "yahoo"
  },
- "_updated": "2026-07-20T10:05:36Z"
+ "BRK-B": {
+  "price": 490.91,
+  "date": "2026-07-17",
+  "mas": [
+   {
+    "k": 5,
+    "label": "週線",
+    "v": 492.064,
+    "above": false,
+    "diff": -0.23,
+    "cross": "bear",
+    "near": false
+   },
+   {
+    "k": 20,
+    "label": "月線",
+    "v": 495.55,
+    "above": false,
+    "diff": -0.94,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 60,
+    "label": "季線",
+    "v": 484.8603,
+    "above": true,
+    "diff": 1.25,
+    "cross": null,
+    "near": false
+   },
+   {
+    "k": 240,
+    "label": "年線",
+    "v": 489.8641,
+    "above": true,
+    "diff": 0.21,
+    "cross": null,
+    "near": true
+   }
+  ],
+  "score": 2,
+  "valid": 4,
+  "provider": "yahoo"
+ },
+ "_updated": "2026-07-20T10:09:00Z"
 }
