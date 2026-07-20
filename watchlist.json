@@ -22,6 +22,7 @@
   "watch": [
     {"s":"ARM","group":"半導體"},
     {"s":"COHR","group":"光通訊"},
-    {"s":"AAOI","group":"光通訊"}
+    {"s":"AAOI","group":"光通訊"},
+    {"s":"BRK-B","group":"金融控股 · 原持股已賣出"}
   ]
 }
