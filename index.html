@@ -360,7 +360,7 @@ function renderMacro(){
   const bigCards=BIG_HOLD_CARDS.filter(s=>DATA[s]).map(bigHoldCard).join("");
   // 紅綠燈跟著 IB 區走(NDX 槓桿判斷);指數卡不顯示,NDX/VIX 數據仍供紅綠燈用
   document.getElementById("macro").innerHTML =
-    `<div class="blk"><h2>IB 帳戶 · 歐股</h2><div class="cards">${bigCards}</div>${ibRows}</div>` +
+    `<div class="blk"><h2>歐洲大盤</h2><div class="cards">${bigCards}</div>${ibRows}</div>` +
     macroRuleHtml() +
     `<div class="blk"><h2>台灣大盤</h2>${twRows}</div>`;
 }
