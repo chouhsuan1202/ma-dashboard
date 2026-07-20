@@ -350,13 +350,13 @@ function macroRuleHtml(){
     <div><div class="msg">${msg}</div><div class="why">${why}</div></div></div>`;
 }
 function renderMacro(){
-  const idx=(WL.indexes||[]);
   const mh=(WL.market_holdings||[]);
   // 清單跳過已有持有大卡的標的（SXRV.DE、SEC0.DE…）
   const mhRows=mh.filter(h=>!BIG_HOLD_CARDS.includes(h.s)).map(h=>stockRow(h.s, null, h.note, h.dn)).join("");
   const bigCards=BIG_HOLD_CARDS.filter(s=>DATA[s]).map(bigHoldCard).join("");
+  // 指數卡(SPX/NDX/SOX)不再顯示:大盤分頁只放實際持有;NDX/VIX 數據仍供紅綠燈判斷用
   document.getElementById("macro").innerHTML =
-    `<div class="cards">${bigCards}${idx.filter(s=>s!=="^VIX").map(indexCard).join("")}</div>` +
+    `<div class="cards">${bigCards}</div>` +
     macroRuleHtml() +
     `<div class="blk"><h2>我的大盤部位</h2>${mhRows}</div>`;
 }
