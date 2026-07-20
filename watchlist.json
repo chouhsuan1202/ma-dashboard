@@ -11,11 +11,13 @@
     {"s":"00646.TW","dn":"元大S&P500","note":""}
   ],
   "holdings": [
+    {"s":"NVDA"},
     {"s":"TSM","dn":"台積電","note":"2330 現股+ADR"},
-    {"s":"NVDA"},{"s":"GOOGL"},{"s":"AMD"},{"s":"AVGO"},{"s":"SNDK"},
-    {"s":"META"},{"s":"AMZN"},{"s":"BRK-B"},{"s":"AAPL"},{"s":"LITE"},
-    {"s":"MSFT"},{"s":"MU"},{"s":"TSLA"},{"s":"ANET"},{"s":"ASML"},
-    {"s":"MRVL"},{"s":"PLTR"},{"s":"CRWD"},{"s":"NET"}
+    {"s":"GOOGL"},{"s":"AMD"},{"s":"AVGO"},{"s":"META"},{"s":"AMZN"},
+    {"s":"SNDK"},{"s":"AAPL"},{"s":"LITE"},{"s":"MSFT"},{"s":"ANET"},
+    {"s":"MU"},{"s":"ASML"},{"s":"TSLA"},{"s":"MRVL"},{"s":"PLTR"},
+    {"s":"CRWD"},{"s":"NET"},
+    {"s":"SPCX","dn":"SpaceX","note":"2026/06 上市 · 季線年線未成形"}
   ],
   "watch": [
     {"s":"ARM","group":"半導體"},
