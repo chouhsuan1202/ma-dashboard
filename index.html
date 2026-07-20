@@ -63,8 +63,8 @@
   .naidx{color:var(--faint);font-size:12px;padding:6px 0;}
 
   /* dot */
-  .dot{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:9.5px;color:var(--faint);}
-  .dot i{width:13px;height:13px;border-radius:50%;display:block;}
+  .dot{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:9px;color:var(--faint);line-height:1;}
+  .dot i{width:11px;height:11px;border-radius:50%;display:block;}
   .dot.up i{background:var(--dot-up);} .dot.dn i{background:var(--dot-dn);} .dot.na i{background:var(--dot-na);}
 
   /* traffic light rule */
@@ -110,18 +110,21 @@
   .blk{margin-bottom:16px;}
   .blk h2{font-size:12px;color:var(--muted);font-weight:600;margin:0 0 7px;padding-left:2px;}
   .grphd{font-size:12px;color:var(--ink);font-weight:700;margin:12px 0 6px;padding-left:2px;}
-  .row{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:7px;cursor:pointer;}
-  .row .head{display:flex;align-items:center;gap:10px;}
-  .row .id{flex:1;min-width:70px;}
-  .row .sym{font-size:15px;font-weight:800;}
-  .row .grp{font-size:10px;color:var(--faint);display:block;margin-top:1px;}
-  .row .dots{display:flex;gap:8px;flex:none;}
-  .row .rt{flex:none;text-align:right;min-width:78px;}
-  .row .rt .px{font-size:14px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--ink);}
-  .row .yr{font-size:13px;font-weight:800;font-variant-numeric:tabular-nums;display:block;}
+  .row{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:7px 11px;margin-bottom:5px;cursor:pointer;}
+  .row .head{display:flex;align-items:center;gap:9px;}
+  .row .id{flex:1;min-width:0;}
+  .row .sym{font-size:14.5px;font-weight:800;}
+  .row .grp{font-size:10px;color:var(--faint);display:block;margin-top:0;line-height:1.3;}
+  .row .dots{display:flex;gap:7px;flex:none;}
+  .row .rt{flex:none;text-align:right;min-width:72px;}
+  .row .rt .px{font-size:14px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--ink);line-height:1.25;}
+  /* 年線% 與 站上數 併成一行,省掉一整行高度 */
+  .row .sub{display:flex;align-items:baseline;justify-content:flex-end;gap:5px;line-height:1.2;}
+  .row .yr{font-size:12.5px;font-weight:800;font-variant-numeric:tabular-nums;}
   .row .yr.up{color:var(--up);} .row .yr.dn{color:var(--dn);} .row .yr.na{color:var(--faint);}
-  .row .sc{font-size:11px;color:var(--muted);margin-top:1px;}
-  .row .rowip{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.4;}
+  .row .sc{font-size:10.5px;color:var(--muted);}
+  /* 判讀文字移進展開區,收合時不佔高度 */
+  .row .detail .rowip{grid-column:1 / -1;font-size:11px;color:var(--muted);line-height:1.4;margin:0 0 2px;}
   .row .note{font-size:11px;color:var(--faint);display:block;margin-top:2px;}
   .row.err{opacity:.6;}
   .row .nd{color:var(--faint);font-size:12px;}
@@ -471,11 +474,13 @@ function stockRow(sym, group, note, dn){
   return `<div class="row" data-sym="${sym}">
     <div class="head">
       ${idHtml}
-      <div class="rt"><div class="px">${pxTxt}</div>${yrHtml(r)}<div class="sc">${r.score}/${r.valid} <span class="caret">▾</span></div></div>
+      <div class="rt">
+        <div class="px">${pxTxt}</div>
+        <div class="sub">${yrHtml(r)}<span class="sc">${r.score}/${r.valid}</span><span class="caret">▾</span></div>
+      </div>
       <div class="dots">${dotsHtml(r)}</div>
     </div>
-    ${ipHtml}
-    <div class="detail">${detailHtml(r)}</div>
+    <div class="detail">${ipHtml}${detailHtml(r)}</div>
   </div>`;
 }
 /* ---------- 持股分頁（僅統計 holdings 20 檔，依 watchlist 權重順序） ---------- */
