@@ -346,11 +346,6 @@ function macroLevel(){
   why=why.replace(/\s+/g," ").trim();
   return {level,msg,why};
 }
-function macroRuleHtml(){
-  const {level,msg,why}=macroLevel();
-  return `<div class="rule"><span class="lamp ${level}"></span>
-    <div><div class="msg">${msg}</div><div class="why">${why}</div></div></div>`;
-}
 function renderMacro(){
   const mh=(WL.market_holdings||[]);
   // 依帳戶分區:.TW 結尾歸台灣,其餘歸 IB(歐股)。大卡(SXRV/SEC0)固定在 IB 區最頂
@@ -358,9 +353,8 @@ function renderMacro(){
   const ibRows=mh.filter(h=>!BIG_HOLD_CARDS.includes(h.s)&&!isTW(h.s)).map(h=>stockRow(h.s, null, h.note, h.dn)).join("");
   const twRows=mh.filter(h=>isTW(h.s)).map(h=>stockRow(h.s, null, h.note, h.dn)).join("");
   const bigCards=BIG_HOLD_CARDS.filter(s=>DATA[s]).map(bigHoldCard).join("");
-  // 紅綠燈(NDX 大盤方向)放最頂、緊接 VIX 溫度計之下;指數卡不顯示,NDX/VIX 數據仍供紅綠燈用
+  // NDX 大盤方向已整合進頂部訊號卡(ndxNoteHtml);指數卡不顯示,NDX/VIX 數據仍供燈號判斷用
   document.getElementById("macro").innerHTML =
-    macroRuleHtml() +
     `<div class="blk"><h2>歐洲大盤</h2><div class="cards">${bigCards}</div>${ibRows}</div>` +
     `<div class="blk"><h2>台灣大盤</h2>${twRows}</div>`;
 }
@@ -411,6 +405,14 @@ function vixNoteHtml(){
   const tag=txt?`<span class="vixtag" style="background:${col}">${txt}</span>`:"";
   return `<div class="vixnote"><span class="vixk">◷ VIX 恐慌溫度計</span><b>${val}</b>${tag}</div>`;
 }
+// NDX 大盤方向行:與 VIX 溫度計同款設計,融入訊號卡(取代原獨立紅綠燈卡)
+function ndxNoteHtml(){
+  const {level,msg,why}=macroLevel();
+  const col=({green:"var(--green)",yellow:"var(--yellow)",red:"var(--red)",gray:"var(--dot-na)"})[level];
+  return `<div class="vixnote" style="flex-wrap:wrap"><span class="vixk">◎ NDX 大盤方向</span>
+    <span class="vixtag" style="background:${col}">${msg}</span>
+    <span style="font-size:11.5px;color:var(--muted)">${why}</span></div>`;
+}
 function signalsHtml(){
   const {bull,bear}=crossSignals();
   const near=nearSignals();
@@ -424,7 +426,7 @@ function signalsHtml(){
       h+=`<div class="sigrow"><span class="tag n">接近</span><span class="sigtxt">${txt}</span></div>`;
     }
   }
-  h+=vixNoteHtml();
+  h+=vixNoteHtml()+ndxNoteHtml();
   return h+`</div>`;
 }
 
