@@ -50,7 +50,8 @@
   .icard .px{font-size:22px;font-weight:800;font-variant-numeric:tabular-nums;margin:4px 0 1px;}
   .icard .yr{font-size:12px;font-weight:700;font-variant-numeric:tabular-nums;}
   .icard .yr .lbl{color:var(--faint);font-weight:500;}
-  .icard .dots{display:flex;gap:7px;margin:9px 0 3px;}
+  .icard .mid{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:2px 0 3px;}
+  .icard .dots{display:flex;gap:7px;}
   .icard .foot{display:flex;align-items:center;justify-content:space-between;margin-top:6px;}
   .icard .sc{font-size:12px;color:var(--muted);}
   .icard .sc b{font-size:15px;}
@@ -110,10 +111,10 @@
   .grphd{font-size:12px;color:var(--ink);font-weight:700;margin:12px 0 6px;padding-left:2px;}
   .row{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:7px;cursor:pointer;}
   .row .head{display:flex;align-items:center;gap:10px;}
-  .row .id{flex:none;min-width:70px;}
+  .row .id{flex:1;min-width:70px;}
   .row .sym{font-size:15px;font-weight:800;}
   .row .grp{font-size:10px;color:var(--faint);display:block;margin-top:1px;}
-  .row .dots{display:flex;gap:8px;flex:1;justify-content:center;}
+  .row .dots{display:flex;gap:8px;flex:none;}
   .row .rt{flex:none;text-align:right;min-width:78px;}
   .row .rt .px{font-size:14px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--ink);}
   .row .yr{font-size:13px;font-weight:800;font-variant-numeric:tabular-nums;display:block;}
@@ -277,9 +278,10 @@ function bigHoldCard(sym){
   const curHtml=cur?` <span style="font-size:12px;color:var(--faint);font-weight:600">${cur}</span>`:'';
   return `<div class="icard span2${clickable}">
     <div class="top"><span class="short">${short}${r.hist?' <span class="caret">▾</span>':''}</span><span class="full">${full} ${holdTag}</span></div>
-    <div class="px">${px}${curHtml}</div>
-    <div>${yr}</div>
-    <div class="dots">${dotsHtml(r)}</div>
+    <div class="mid">
+      <div><div class="px">${px}${curHtml}</div><div>${yr}</div></div>
+      <div class="dots">${dotsHtml(r)}</div>
+    </div>
     <div class="foot">${pillHtml}</div>
     ${ipHtml}
   </div>`;
@@ -467,8 +469,8 @@ function stockRow(sym, group, note, dn){
   return `<div class="row" data-sym="${sym}">
     <div class="head">
       ${idHtml}
-      <div class="dots">${dotsHtml(r)}</div>
       <div class="rt"><div class="px">${pxTxt}</div>${yrHtml(r)}<div class="sc">${r.score}/${r.valid} <span class="caret">▾</span></div></div>
+      <div class="dots">${dotsHtml(r)}</div>
     </div>
     ${ipHtml}
     <div class="detail">${detailHtml(r)}</div>
