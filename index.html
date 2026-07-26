@@ -125,6 +125,23 @@
   .row .sc{font-size:10.5px;color:var(--muted);}
   /* 判讀文字移進展開區,收合時不佔高度 */
   .row .detail .rowip{grid-column:1 / -1;font-size:11px;color:var(--muted);line-height:1.4;margin:0 0 2px;}
+  .row .grp .pe,.grp{white-space:nowrap;}
+
+  /* 財報時間表 */
+  .erow{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);
+    border-radius:11px;padding:9px 12px;margin-bottom:5px;}
+  .erow .edate{flex:none;width:52px;text-align:center;line-height:1.1;}
+  .erow .edate b{font-size:15px;font-weight:800;font-variant-numeric:tabular-nums;display:block;}
+  .erow .edate span{font-size:10px;color:var(--faint);}
+  .erow .esym{flex:1;min-width:0;font-size:14.5px;font-weight:700;}
+  .erow .esym .ecode{font-size:10.5px;color:var(--faint);font-weight:500;margin-left:6px;}
+  .erow .emeta{flex:none;display:flex;align-items:center;gap:6px;}
+  .ebadge{font-size:11px;font-weight:700;color:var(--muted);background:var(--bg);
+    border-radius:7px;padding:3px 8px;font-variant-numeric:tabular-nums;white-space:nowrap;}
+  .ebadge.today{color:#fff;background:var(--red);}
+  .ebadge.soon{color:var(--nearink);background:var(--nearbg);}
+  .ebadge.past{color:var(--faint);background:transparent;padding:3px 0;}
+  .eest{font-size:10px;color:var(--faint);border:1px solid var(--line);border-radius:6px;padding:1px 5px;}
   .row .note{font-size:11px;color:var(--faint);display:block;margin-top:2px;}
   .row.err{opacity:.6;}
   .row .nd{color:var(--faint);font-size:12px;}
@@ -198,6 +215,7 @@
     <button data-tab="macro" class="active">大盤</button>
     <button data-tab="stocks">持股</button>
     <button data-tab="watch">觀察清單</button>
+    <button data-tab="earnings">財報</button>
   </div>
 
   <div id="topstrip" class="topstrip"></div>
@@ -206,6 +224,7 @@
   <div id="macro" class="pane"></div>
   <div id="stocks" class="pane" hidden></div>
   <div id="watch" class="pane" hidden></div>
+  <div id="earnings" class="pane" hidden></div>
 
   <footer>Designed by Hsuan x her AI bestie</footer>
 </div>
@@ -464,7 +483,9 @@ function detailHtml(r){
 function stockRow(sym, group, note, dn){
   const r=DATA[sym];
   const main = dn || sym;
-  const idHtml=`<div class="id"><span class="sym">${main}</span>${group?`<span class="grp">${group}</span>`:(note?`<span class="grp">${note}</span>`:"")}</div>`;
+  // 左側小字:分類/備註 + P/E(有才顯示),併成一行
+  const metaTxt=[(group||note||""), (r&&r.pe!=null)?`P/E ${r.pe}`:""].filter(Boolean).join(" · ");
+  const idHtml=`<div class="id"><span class="sym">${main}</span>${metaTxt?`<span class="grp">${metaTxt}</span>`:""}</div>`;
   if(!r||r.error){
     return `<div class="row err"><div class="head">${idHtml}<span class="nd">${(r&&r.error)||"無資料"}</span></div></div>`;
   }
@@ -501,6 +522,49 @@ function renderWatch(){
   document.getElementById("watch").innerHTML=html;
 }
 
+/* ---------- 財報時間表分頁 ---------- */
+function renderEarnings(){
+  const list=(DATA._earnings||[]);
+  const el=document.getElementById("earnings");
+  if(!list.length){
+    el.innerHTML=`<div class="blk"><div class="nd" style="padding:16px 4px">尚無財報日資料,等待下次自動更新。</div></div>`;
+    return;
+  }
+  // 以本地日期零點為基準算距今天數
+  const today=new Date(); today.setHours(0,0,0,0);
+  const rows=list.map(e=>{
+    const dt=new Date(e.date+"T00:00:00");
+    const days=Math.round((dt-today)/864e5);
+    return {...e, dt, days};
+  });
+  const upcoming=rows.filter(r=>r.days>=0);
+  const past=rows.filter(r=>r.days<0).sort((a,b)=>b.dt-a.dt);  // 最近的在前
+  const dn=s=>{ const e=wlEntry(s); return e.dn||s; };
+  const fmtDate=dt=>`${dt.getMonth()+1}/${dt.getDate()}`;
+  const wk=["日","一","二","三","四","五","六"];
+  const rowHtml=(r,isPast)=>{
+    let badge;
+    if(isPast){ badge=`<span class="ebadge past">${-r.days} 天前</span>`; }
+    else if(r.days===0){ badge=`<span class="ebadge today">今天</span>`; }
+    else if(r.days<=7){ badge=`<span class="ebadge soon">${r.days} 天後</span>`; }
+    else { badge=`<span class="ebadge">${r.days} 天後</span>`; }
+    const est=r.est?`<span class="eest">預估</span>`:"";
+    return `<div class="erow" data-sym="${r.s}">
+      <div class="edate"><b>${fmtDate(r.dt)}</b><span>週${wk[r.dt.getDay()]}</span></div>
+      <div class="esym">${dn(r.s)}<span class="ecode">${r.s}</span></div>
+      <div class="emeta">${est}${badge}</div>
+    </div>`;
+  };
+  let html="";
+  if(upcoming.length){
+    html+=`<div class="blk"><h2>即將公布(${upcoming.length})</h2>${upcoming.map(r=>rowHtml(r,false)).join("")}</div>`;
+  }
+  if(past.length){
+    html+=`<div class="blk"><h2>最近已公布(${past.length})</h2>${past.map(r=>rowHtml(r,true)).join("")}</div>`;
+  }
+  el.innerHTML=html;
+}
+
 /* ---------- 頂部訊息列（今日均線訊號） ---------- */
 function renderTopStrip(){
   document.getElementById("topstrip").innerHTML = signalsHtml();
@@ -509,9 +573,11 @@ function renderTopStrip(){
 /* 切到指定分頁（重用 tab 切換邏輯，含 active 樣式更新） */
 function switchTab(t){
   document.querySelectorAll(".tabs button").forEach(x=>x.classList.toggle("active", x.dataset.tab===t));
-  document.getElementById("macro").hidden  = t!=="macro";
-  document.getElementById("stocks").hidden = t!=="stocks";
-  document.getElementById("watch").hidden  = t!=="watch";
+  ["macro","stocks","watch","earnings"].forEach(p=>{
+    document.getElementById(p).hidden = t!==p;
+  });
+  // 財報分頁與均線訊號無關,隱藏頂部訊號列
+  document.getElementById("topstrip").hidden = t==="earnings";
 }
 
 /* ---------- 點擊彈窗:走勢線圖 ---------- */
@@ -663,6 +729,7 @@ function loadData(){
     renderMacro();
     renderStocks();
     renderWatch();
+    renderEarnings();
   }).catch(e=>{
     if(!DATA) document.getElementById("status").innerHTML='<span class="nd">尚無資料,等待首次自動更新完成。</span>';
   }).finally(()=>{

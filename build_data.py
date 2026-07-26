@@ -35,6 +35,8 @@ def _dedupe(seq):
     return out
 
 STOCK_SYMBOLS = _dedupe(MARKET_HOLDINGS + HOLDINGS + WATCH)
+# 只有個股(holdings + watch)抓 P/E 與財報日;指數與 ETF(market_holdings)不抓
+FUNDAMENTAL_SYMBOLS = _dedupe(HOLDINGS + WATCH)
 # 對外公開的完整代碼清單(供檢查用)
 SYMBOLS = _dedupe(INDEXES + STOCK_SYMBOLS)
 
@@ -219,6 +221,54 @@ def build_index(sym):
         return r
 
 
+def fetch_fundamentals(symbols):
+    """用 Yahoo quoteSummary(需 crumb)抓個股 P/E 與下次財報日。
+    最佳努力:任何失敗都回傳已取得的部分,絕不讓核心 MA 資料建置中斷。
+    回傳 {sym: {"pe": float|None, "earnings": "YYYY-MM-DD"|None, "est": bool}}。"""
+    import http.cookiejar
+    out = {}
+    ua = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
+    try:
+        cj = http.cookiejar.CookieJar()
+        op = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(cj))
+        op.addheaders = [("User-Agent", ua)]
+        try:
+            op.open("https://fc.yahoo.com", timeout=15)
+        except Exception:
+            pass
+        crumb = op.open("https://query2.finance.yahoo.com/v1/test/getcrumb",
+                        timeout=15).read().decode().strip()
+    except Exception as e:
+        print(f"WARN 無法取得 Yahoo crumb,略過 P/E 與財報日: {e}")
+        return out
+    if not crumb or "<" in crumb:
+        print("WARN Yahoo crumb 無效,略過 P/E 與財報日")
+        return out
+
+    for sym in symbols:
+        url = (f"https://query2.finance.yahoo.com/v10/finance/quoteSummary/"
+               f"{urllib.parse.quote(sym)}?modules=summaryDetail,calendarEvents"
+               f"&crumb={urllib.parse.quote(crumb)}")
+        try:
+            with op.open(url, timeout=20) as r:
+                res = json.load(r)["quoteSummary"]["result"][0]
+            sd = res.get("summaryDetail", {}) or {}
+            ce = res.get("calendarEvents", {}) or {}
+            pe = (sd.get("trailingPE") or {}).get("raw")
+            if pe is None:
+                pe = (sd.get("forwardPE") or {}).get("raw")
+            ed = (ce.get("earnings") or {}).get("earningsDate") or []
+            edate = ed[0].get("fmt") if ed else None
+            out[sym] = {"pe": round(pe, 1) if pe is not None else None,
+                        "earnings": edate,
+                        "est": len(ed) > 1}
+            print(f"OK  fund {sym}: PE={out[sym]['pe']} 財報={edate}")
+        except Exception as e:
+            print(f"ERR fund {sym}: {str(e)[:80]}")
+        time.sleep(0.3)
+    return out
+
+
 out = {}
 
 # 1) 指數(含 fallback)
@@ -244,6 +294,22 @@ for sym in STOCK_SYMBOLS:
         out[sym] = {"error": msg}
         print(f"ERR {sym}: {e}")
     time.sleep(0.25)
+
+# 3) 個股基本面(P/E + 下次財報日),併進個股並彙整成財報清單
+funds = fetch_fundamentals(FUNDAMENTAL_SYMBOLS)
+earnings = []
+for sym in FUNDAMENTAL_SYMBOLS:
+    f = funds.get(sym)
+    if not f:
+        continue
+    if isinstance(out.get(sym), dict) and not out[sym].get("error"):
+        if f.get("pe") is not None:
+            out[sym]["pe"] = f["pe"]
+    if f.get("earnings"):
+        earnings.append({"s": sym, "date": f["earnings"], "est": f.get("est", False)})
+earnings.sort(key=lambda x: x["date"])
+out["_earnings"] = earnings
+print(f"\n基本面:P/E {sum(1 for s in FUNDAMENTAL_SYMBOLS if isinstance(out.get(s),dict) and out[s].get('pe') is not None)} 檔,財報日 {len(earnings)} 檔。")
 
 out["_updated"] = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 with open(os.path.join(HERE, "data.json"), "w", encoding="utf-8") as f:
