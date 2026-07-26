@@ -127,17 +127,21 @@
   .row .detail .rowip{grid-column:1 / -1;font-size:11px;color:var(--muted);line-height:1.4;margin:0 0 2px;}
   .row .grp .pe,.grp{white-space:nowrap;}
 
-  /* 財報時間表 */
-  .erow{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);
-    border-radius:11px;padding:9px 12px;margin-bottom:5px;}
-  .erow .edate{flex:none;width:52px;text-align:center;line-height:1.1;}
-  .erow .edate b{font-size:15px;font-weight:800;font-variant-numeric:tabular-nums;display:block;}
-  .erow .edate span{font-size:10px;color:var(--faint);}
-  .erow .esym{flex:1;min-width:0;font-size:14.5px;font-weight:700;}
-  .erow .esym .ecode{font-size:10.5px;color:var(--faint);font-weight:500;margin-left:6px;}
-  .erow .emeta{flex:none;display:flex;align-items:center;gap:6px;}
-  .ebadge{font-size:11px;font-weight:700;color:var(--muted);background:var(--bg);
-    border-radius:7px;padding:3px 8px;font-variant-numeric:tabular-nums;white-space:nowrap;}
+  /* 財報時間表:一天一張卡,同天股票合併 */
+  .ecard{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:9px 12px;margin-bottom:6px;}
+  .ecard-top{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+  .edate{display:flex;align-items:baseline;gap:6px;line-height:1.1;}
+  .edate b{font-size:15px;font-weight:800;font-variant-numeric:tabular-nums;}
+  .edate span{font-size:11px;color:var(--faint);}
+  .emeta{flex:none;display:flex;align-items:center;gap:6px;}
+  .echips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+  .echip{display:inline-flex;align-items:baseline;gap:5px;font-size:13px;font-weight:700;color:var(--ink);
+    background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:4px 9px;text-decoration:none;}
+  .echip:active{background:var(--line);}
+  .echip .ecode{font-size:10px;color:var(--faint);font-weight:500;}
+  .echip .elink{font-size:10px;color:var(--faint);font-weight:700;}
+  .ebadge{font-size:11.5px;font-weight:700;color:var(--muted);background:var(--bg);
+    border-radius:7px;padding:3px 9px;font-variant-numeric:tabular-nums;white-space:nowrap;}
   .ebadge.today{color:#fff;background:var(--red);}
   .ebadge.soon{color:var(--nearink);background:var(--nearbg);}
   .ebadge.past{color:var(--faint);background:transparent;padding:3px 0;}
@@ -532,35 +536,46 @@ function renderEarnings(){
   }
   // 以本地日期零點為基準算距今天數
   const today=new Date(); today.setHours(0,0,0,0);
-  const rows=list.map(e=>{
-    const dt=new Date(e.date+"T00:00:00");
-    const days=Math.round((dt-today)/864e5);
-    return {...e, dt, days};
-  });
-  const upcoming=rows.filter(r=>r.days>=0);
-  const past=rows.filter(r=>r.days<0).sort((a,b)=>b.dt-a.dt);  // 最近的在前
   const dn=s=>{ const e=wlEntry(s); return e.dn||s; };
   const fmtDate=dt=>`${dt.getMonth()+1}/${dt.getDate()}`;
   const wk=["日","一","二","三","四","五","六"];
-  const rowHtml=(r,isPast)=>{
+  // 點擊個股 → 開 Yahoo 奇摩股市該股「相關新聞」頁(繁體財報分析/法人評等/市場評論)。
+  // 用 /news 而非行情頁,直接落在最近財報的中文分析。代號原樣,BRK-B 直接可用。
+  const zhUrl=s=>`https://tw.stock.yahoo.com/quote/${s}/news`;
+  // 依日期分組:同一天的股票合併成一張卡
+  const byDate=new Map();
+  list.forEach(e=>{
+    if(!byDate.has(e.date)) byDate.set(e.date, []);
+    byDate.get(e.date).push(e);
+  });
+  const groups=[...byDate.entries()].map(([date,items])=>{
+    const dt=new Date(date+"T00:00:00");
+    return {date, dt, days:Math.round((dt-today)/864e5), items};
+  });
+  const upcoming=groups.filter(g=>g.days>=0).sort((a,b)=>a.dt-b.dt);
+  const past=groups.filter(g=>g.days<0).sort((a,b)=>b.dt-a.dt);  // 最近的在前
+  const cardHtml=g=>{
     let badge;
-    if(isPast){ badge=`<span class="ebadge past">${-r.days} 天前</span>`; }
-    else if(r.days===0){ badge=`<span class="ebadge today">今天</span>`; }
-    else if(r.days<=7){ badge=`<span class="ebadge soon">${r.days} 天後</span>`; }
-    else { badge=`<span class="ebadge">${r.days} 天後</span>`; }
-    const est=r.est?`<span class="eest">預估</span>`:"";
-    return `<div class="erow" data-sym="${r.s}">
-      <div class="edate"><b>${fmtDate(r.dt)}</b><span>週${wk[r.dt.getDay()]}</span></div>
-      <div class="esym">${dn(r.s)}<span class="ecode">${r.s}</span></div>
-      <div class="emeta">${est}${badge}</div>
+    if(g.days<0){ badge=`<span class="ebadge past">${-g.days} 天前</span>`; }
+    else if(g.days===0){ badge=`<span class="ebadge today">今天</span>`; }
+    else if(g.days<=7){ badge=`<span class="ebadge soon">${g.days} 天後</span>`; }
+    else { badge=`<span class="ebadge">${g.days} 天後</span>`; }
+    const est=g.items.some(x=>x.est)?`<span class="eest">預估</span>`:"";
+    const chips=g.items.map(x=>`<a class="echip" href="${zhUrl(x.s)}" target="_blank" rel="noopener">${dn(x.s)}<span class="ecode">${x.s}</span><span class="elink">↗</span></a>`).join("");
+    return `<div class="ecard">
+      <div class="ecard-top">
+        <div class="edate"><b>${fmtDate(g.dt)}</b><span>週${wk[g.dt.getDay()]}</span></div>
+        <div class="emeta">${est}${badge}</div>
+      </div>
+      <div class="echips">${chips}</div>
     </div>`;
   };
   let html="";
   if(upcoming.length){
-    html+=`<div class="blk"><h2>即將公布(${upcoming.length})</h2>${upcoming.map(r=>rowHtml(r,false)).join("")}</div>`;
+    html+=`<div class="blk"><h2>即將公布</h2>${upcoming.map(cardHtml).join("")}</div>`;
   }
   if(past.length){
-    html+=`<div class="blk"><h2>最近已公布(${past.length})</h2>${past.map(r=>rowHtml(r,true)).join("")}</div>`;
+    html+=`<div class="blk"><h2>最近已公布</h2>${past.map(cardHtml).join("")}</div>`;
   }
   el.innerHTML=html;
 }
