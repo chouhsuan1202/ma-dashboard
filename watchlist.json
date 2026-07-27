@@ -7,7 +7,7 @@
     {"s":"EWT","dn":"台灣 ETF","note":"iShares MSCI Taiwan"},
     {"s":"EWY","dn":"韓股 ETF","note":"iShares MSCI Korea"},
     {"s":"GLD","dn":"黃金","note":"Xetra-Gold 4GLD · 以 GLD 估"},
-    {"s":"0050.TW","dn":"元大台灣50","note":""},
+    {"s":"0050.TW","dn":"元大台灣50 · 0050","note":""},
     {"s":"006208.TW","dn":"富邦台50","note":""},
     {"s":"0056.TW","dn":"元大高股息","note":""},
     {"s":"00646.TW","dn":"元大S&P500","note":""}

@@ -189,7 +189,7 @@
   .clabel{font-size:10.5px;fill:var(--faint);font-variant-numeric:tabular-nums;}
   .cnodata{padding:44px 0;text-align:center;color:var(--muted);}
   .cdates{display:flex;justify-content:space-between;font-size:10.5px;color:var(--faint);margin-top:3px;}
-  .segs{display:flex;gap:10px;justify-content:space-between;margin:12px 0 2px;flex-wrap:wrap;}
+  .segs{display:flex;margin:12px 0 2px;}
   .segrow{display:flex;gap:4px;background:#eceef1;border-radius:10px;padding:3px;}
   .segrow button{border:none;background:transparent;color:var(--muted);font-size:12.5px;font-weight:600;
     padding:6px 12px;border-radius:8px;cursor:pointer;}
@@ -596,33 +596,18 @@ function switchTab(t){
 }
 
 /* ---------- 點擊彈窗:走勢線圖 ---------- */
-const RANGE_PTS={ "3M":63, "6M":126, "1Y":252, "ALL":1e9 };
-const RANGE_LBL={ "3M":"3月", "6M":"6月", "1Y":"1年", "ALL":"全部" };
-let CHART={ sym:null, range:"6M", intv:"D" };
+const RANGE_PTS={ "1D":2, "1W":5, "3M":63, "6M":126, "1Y":252, "ALL":1e9 };
+const RANGE_LBL={ "1D":"1日", "1W":"1週", "3M":"3月", "6M":"6月", "1Y":"1年", "ALL":"全部" };
+let CHART={ sym:null, range:"6M" };
 
 // 從 watchlist 找顯示名 / 說明
 function wlEntry(sym){
   return [...(WL.market_holdings||[]), ...(WL.holdings||[]), ...(WL.watch||[])].find(h=>h.s===sym) || {s:sym};
 }
-// ISO 週鍵值(週線降採樣用)
-function wkKey(iso){
-  const dt=new Date(iso+"T00:00:00Z"); const day=(dt.getUTCDay()+6)%7;
-  dt.setUTCDate(dt.getUTCDate()-day+3);
-  const firstThu=new Date(Date.UTC(dt.getUTCFullYear(),0,4));
-  return dt.getUTCFullYear()*100 + (1+Math.round((dt-firstThu)/(7*864e5)));
-}
-// 依區間取尾段,週線再降採樣(每週取最後一筆)
+// 依選定區間取歷史資料尾段
 function slice(hist){
   const n=hist.c.length, k=Math.min(n, RANGE_PTS[CHART.range]);
-  let d=hist.d.slice(n-k), c=hist.c.slice(n-k);
-  if(CHART.intv==="W"){
-    const od=[], oc=[]; let key=null;
-    for(let i=0;i<d.length;i++){ const w=wkKey(d[i]);
-      if(w!==key){ od.push(d[i]); oc.push(c[i]); key=w; }
-      else { od[od.length-1]=d[i]; oc[oc.length-1]=c[i]; } }
-    d=od; c=oc;
-  }
-  return {d,c};
+  return {d:hist.d.slice(n-k), c:hist.c.slice(n-k)};
 }
 function fmtDate(iso){ const p=iso.split("-"); return `${p[0]}/${p[1]}/${p[2]}`; }
 function num(v,dp){ return v.toLocaleString(undefined,{minimumFractionDigits:dp,maximumFractionDigits:dp}); }
@@ -673,10 +658,9 @@ function renderChart(){
   const last=c[c.length-1], prev=c.length>1?c[c.length-2]:last;
   const chg=(last/prev-1)*100, cCls=chg>=0?"up":"dn", cS=chg>=0?"+":"";
   const seg=(group,val,map)=>`<div class="segrow">`+Object.keys(map).map(kk=>
-      `<button data-${group}="${kk}" class="${CHART[group==='range'?'range':'intv']===kk?'on':''}">${map[kk]}</button>`).join("")+`</div>`;
+      `<button data-${group}="${kk}" class="${CHART.range===kk?'on':''}">${map[kk]}</button>`).join("")+`</div>`;
   const segs=`<div class="segs">
       ${seg("range",CHART.range,RANGE_LBL)}
-      ${seg("intv",CHART.intv,{D:"日線",W:"週線"})}
     </div>`;
   const ip=interpret(r); const ipHtml=ip?`<div class="sinterp">↳ ${ip} &nbsp;${r.score}/${r.valid}</div>`:"";
   document.getElementById("chartSheet").innerHTML=
@@ -694,7 +678,7 @@ function renderChart(){
      ${ipHtml}`;
 }
 function openChart(sym){
-  CHART={ sym, range:"6M", intv:"D" };
+  CHART={ sym, range:"6M" };
   renderChart();
   document.getElementById("chartModal").classList.add("show");
 }
@@ -708,7 +692,6 @@ document.addEventListener("click",e=>{
   // 彈窗內互動
   if(e.target.closest("#chartSheet")){
     const rb=e.target.closest("[data-range]"); if(rb){ CHART.range=rb.dataset.range; renderChart(); return; }
-    const ib=e.target.closest("[data-intv]");  if(ib){ CHART.intv=ib.dataset.intv;  renderChart(); return; }
     if(e.target.closest("#chartClose")){ closeChart(); return; }
     return; // 點 sheet 內其他區域不關閉
   }
@@ -725,11 +708,19 @@ document.addEventListener("keydown",e=>{ if(e.key==="Escape") closeChart(); });
 
 /* ---------- load（讀取 watchlist.json / data.json,refresh 按鈕重抓同一流程） ---------- */
 const refreshBtn=document.getElementById("refreshBtn");
+function dataUrlsForProtocol(protocol){
+  if(protocol==="file:"){
+    const base="https://raw.githubusercontent.com/chouhsuan1202/ma-dashboard/main/";
+    return [base+"watchlist.json", base+"data.json"];
+  }
+  return ["watchlist.json", "data.json"];
+}
 function loadData(){
   refreshBtn.classList.add("spinning");
+  const [watchlistUrl,dataUrl]=dataUrlsForProtocol(location.protocol);
   return Promise.all([
-    fetch("watchlist.json?t="+Date.now()).then(r=>r.json()),
-    fetch("data.json?t="+Date.now()).then(r=>r.json()),
+    fetch(watchlistUrl+"?t="+Date.now()).then(r=>r.json()),
+    fetch(dataUrl+"?t="+Date.now()).then(r=>r.json()),
   ]).then(([wl,data])=>{
     WL=wl; DATA=data;
     buildHoldMaps();
