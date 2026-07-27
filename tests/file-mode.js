@@ -23,7 +23,16 @@ assert.deepStrictEqual(dataUrlsForProtocol("file:"), [
   "https://raw.githubusercontent.com/chouhsuan1202/ma-dashboard/main/data.json",
 ]);
 
-const taiwan50 = watchlist.market_holdings.find((item) => item.s === "0050.TW");
-assert.strictEqual(taiwan50.dn, "元大台灣50 · 0050");
+const taiwanMarketLabels = Object.fromEntries(
+  watchlist.market_holdings
+    .filter((item) => item.s.endsWith(".TW"))
+    .map((item) => [item.s, { dn: item.dn, note: item.note }]),
+);
+assert.deepStrictEqual(taiwanMarketLabels, {
+  "0050.TW": { dn: "元大台灣50", note: "0050" },
+  "006208.TW": { dn: "富邦台50", note: "006208" },
+  "0056.TW": { dn: "元大高股息", note: "0056" },
+  "00646.TW": { dn: "元大S&P500", note: "00646" },
+});
 
 console.log("file mode data source test passed");
