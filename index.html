@@ -60,7 +60,6 @@
   /* 正二/正三等內建槓桿產品的警示標記,提醒每日重設耗損 */
   .levtag{display:inline-block;margin-left:6px;font-size:10.5px;font-weight:800;color:#9a3412;
     background:#ffedd5;border:1px solid #fb923c;padding:2px 7px;border-radius:6px;vertical-align:middle;}
-  .levwarn{display:block;margin-top:6px;font-size:10.5px;color:#9a3412;}
   .icard .interp{font-size:11px;color:var(--muted);margin-top:7px;line-height:1.4;}
   .fb{display:inline-block;margin-top:6px;font-size:10.5px;color:#92600a;background:#fef3c7;
     border-radius:6px;padding:2px 6px;}
@@ -294,7 +293,6 @@ function bigHoldCard(sym){
   const lev=Number(e.lev||1);
   const levLbl=lev>=3?"正三":"正二";
   const levTag=lev>1?`<span class="levtag">${levLbl} ${lev}x</span>`:"";
-  const levWarn=lev>1?`<span class="levwarn">⚠ 每日重設 ${lev}x,盤整期有耗損,報酬不等於指數 ${lev} 倍</span>`:"";
   if(!r||r.error){
     return `<div class="icard span2">
       <div class="top"><span class="short">${short}${levTag}</span><span class="full">${full}</span></div>
@@ -319,7 +317,6 @@ function bigHoldCard(sym){
       <div class="rcol"><div class="dots">${dotsHtml(r)}</div>${pillHtml}</div>
     </div>
     ${ipHtml}
-    ${levWarn}
   </div>`;
 }
 function indexCard(sym){
@@ -384,15 +381,21 @@ function macroLevel(){
 }
 function renderMacro(){
   const mh=(WL.market_holdings||[]);
-  // 依帳戶分區:.TW 結尾歸台灣,其餘歸 IB(歐股)。大卡(SXRV/SEC0)固定在 IB 區最頂
+  // 依帳戶分區:.TW 結尾歸台灣,其餘歸 IB(歐股)。
+  // 大盤分頁「每張卡片一律用大卡」——同樣式、同互動(可點開走勢圖),不再有精簡列。
+  // BIG_HOLD_CARDS 只決定排序優先(不在清單內的排後面,維持 watchlist 原順序)。
   const isTW=s=>s.endsWith(".TW");
-  const ibRows=mh.filter(h=>!BIG_HOLD_CARDS.includes(h.s)&&!isTW(h.s)).map(h=>stockRow(h.s, null, h.note, h.dn)).join("");
-  const twRows=mh.filter(h=>isTW(h.s)).map(h=>stockRow(h.s, null, h.note, h.dn)).join("");
-  const bigCards=BIG_HOLD_CARDS.filter(s=>DATA[s]).map(bigHoldCard).join("");
+  const rank=h=>{ const i=BIG_HOLD_CARDS.indexOf(h.s); return i<0?99:i; };
+  const cardsOf=list=>list.filter(h=>DATA[h.s])
+    .map((h,i)=>({h,i}))
+    .sort((a,b)=>(rank(a.h)-rank(b.h))||(a.i-b.i))
+    .map(x=>bigHoldCard(x.h.s)).join("");
+  const euCards=cardsOf(mh.filter(h=>!isTW(h.s)));
+  const twCards=cardsOf(mh.filter(h=>isTW(h.s)));
   // NDX 大盤方向已整合進頂部訊號卡(ndxNoteHtml);指數卡不顯示,NDX/VIX 數據仍供燈號判斷用
   document.getElementById("macro").innerHTML =
-    `<div class="blk"><h2>歐洲大盤</h2><div class="cards">${bigCards}</div>${ibRows}</div>` +
-    `<div class="blk"><h2>台灣大盤</h2>${twRows}</div>`;
+    `<div class="blk"><h2>歐洲大盤</h2><div class="cards">${euCards}</div></div>` +
+    `<div class="blk"><h2>台灣大盤</h2><div class="cards">${twCards}</div></div>`;
 }
 
 /* ---------- 訊號（統計 market_holdings + holdings + watch 全部） ---------- */
