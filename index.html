@@ -57,6 +57,10 @@
   .icard .sc{font-size:12px;color:var(--muted);}
   .icard .sc b{font-size:15px;}
   .mapill{display:inline-block;color:#fff;font-weight:800;font-size:12px;padding:4px 10px;border-radius:8px;}
+  /* 正二/正三等內建槓桿產品的警示標記,提醒每日重設耗損 */
+  .levtag{display:inline-block;margin-left:6px;font-size:10.5px;font-weight:800;color:#9a3412;
+    background:#ffedd5;border:1px solid #fb923c;padding:2px 7px;border-radius:6px;vertical-align:middle;}
+  .levwarn{display:block;margin-top:6px;font-size:10.5px;color:#9a3412;}
   .icard .interp{font-size:11px;color:var(--muted);margin-top:7px;line-height:1.4;}
   .fb{display:inline-block;margin-top:6px;font-size:10.5px;color:#92600a;background:#fef3c7;
     border-radius:6px;padding:2px 6px;}
@@ -279,16 +283,21 @@ function interpret(r){
 
 /* ---------- macro tab ---------- */
 // 大盤分頁最頂的「持有大卡」（全寬,可點開彈窗）。SXRV、SEC0 等歐元 ETF 都用這個。
-const BIG_HOLD_CARDS = ["SXRV.DE", "SEC0.DE", "SXR8.DE"];   // 依序渲染在大盤分頁最頂
+const BIG_HOLD_CARDS = ["SXRV.DE", "SEC0.DE", "SXR8.DE", "LQQ.PA"];   // 依序渲染在大盤分頁最頂
 function bigHoldCard(sym){
   const r=DATA[sym];
   const e=(typeof wlEntry==="function")?wlEntry(sym):{s:sym};
   const short=e.dn||sym;
   const cur=(r&&r.currency)||"";
   const full=e.note||"";
+  // 內建槓桿產品(正二/正三)標記:每日重設,長抱有耗損,均線訊號要比原型更嚴格看待
+  const lev=Number(e.lev||1);
+  const levLbl=lev>=3?"正三":"正二";
+  const levTag=lev>1?`<span class="levtag">${levLbl} ${lev}x</span>`:"";
+  const levWarn=lev>1?`<span class="levwarn">⚠ 每日重設 ${lev}x,盤整期有耗損,報酬不等於指數 ${lev} 倍</span>`:"";
   if(!r||r.error){
     return `<div class="icard span2">
-      <div class="top"><span class="short">${short}</span><span class="full">${full}</span></div>
+      <div class="top"><span class="short">${short}${levTag}</span><span class="full">${full}</span></div>
       <div class="naidx">${(r&&r.error)||"無資料"}</div></div>`;
   }
   const px=r.price!=null?r.price.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}):"—";
@@ -304,12 +313,13 @@ function bigHoldCard(sym){
   const clickable=(r.hist)?` clickable" data-sym="${sym}`:'';
   const curHtml=cur?` <span style="font-size:12px;color:var(--faint);font-weight:600">${cur}</span>`:'';
   return `<div class="icard span2${clickable}">
-    <div class="top"><span class="short">${short}${r.hist?' <span class="caret">▾</span>':''}</span><span class="full">${full}</span></div>
+    <div class="top"><span class="short">${short}${levTag}${r.hist?' <span class="caret">▾</span>':''}</span><span class="full">${full}</span></div>
     <div class="mid">
       <div><div class="px">${px}${curHtml}</div><div>${yr}</div></div>
       <div class="rcol"><div class="dots">${dotsHtml(r)}</div>${pillHtml}</div>
     </div>
     ${ipHtml}
+    ${levWarn}
   </div>`;
 }
 function indexCard(sym){

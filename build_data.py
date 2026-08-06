@@ -46,7 +46,7 @@ NEAR_KS = (60, 240)            # 只有季線 / 年線會產生「接近」訊�
 
 # 需要輸出完整價格歷史序列(供前端點擊彈窗畫線圖)的代碼。
 # 先只做 TSM(台積電);之後要幫其他股票加線圖,把代碼加進這個集合即可。
-HIST_SYMBOLS = {"TSM", "SXRV.DE", "SEC0.DE", "SXR8.DE", "0050.TW"}
+HIST_SYMBOLS = {"TSM", "SXRV.DE", "SEC0.DE", "SXR8.DE", "LQQ.PA", "0050.TW"}
 HIST_MAX_DAYS = 520            # 每檔最多保留幾個交易日的歷史(足夠「全部」約 2 年)
 BASE = "https://financialmodelingprep.com/stable/historical-price-eod/light"
 
