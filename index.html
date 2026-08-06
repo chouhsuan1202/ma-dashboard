@@ -87,6 +87,11 @@
   .chip .n{font-size:18px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.1;}
   .chip .cl{font-size:11px;color:var(--muted);margin-top:2px;}
   .chip.bull .n{color:var(--up);} .chip.bear .n{color:var(--dn);} .chip.na .n{color:var(--faint);}
+  /* chip 當篩選 tab 用:可點、選中時反白 */
+  .chip{cursor:pointer;font:inherit;text-align:center;}
+  .chip.on{background:var(--ink);border-color:var(--ink);}
+  .chip.on .cl{color:#fff;}
+  .chip.bull.on .n{color:#4ade80;} .chip.bear.on .n{color:#fca5a5;}
 
   /* top strip: 今日均線訊號（單欄全寬） */
   .topstrip{margin-bottom:14px;}
@@ -220,7 +225,7 @@
 
   <div class="tabs">
     <button data-tab="macro" class="active">大盤</button>
-    <button data-tab="stocks">持股</button>
+    <button data-tab="stocks">個股</button>
     <button data-tab="watch">觀察清單</button>
     <button data-tab="earnings">財報</button>
   </div>
@@ -469,21 +474,27 @@ function signalsHtml(){
   return h+`</div>`;
 }
 
-/* ---------- 清單（持股 / 觀察通用） ---------- */
-function summaryHtml(list){
-  const total=list.length;
-  let bull=0, bear=0, na=0;
-  list.forEach(h=>{
-    const r=DATA[h.s];
-    if(!r||r.error||r.valid===0){ na++; return; }
-    if(r.score===r.valid && r.valid>0) bull++;
-    else if(r.score===0) bear++;
-  });
+/* ---------- 清單（個股 / 觀察通用） ---------- */
+// 個股/觀察清單的分類:bull=站上全部均線、bear=全部跌破、na=無資料或均線未成形
+function trendOf(sym){
+  const r=DATA[sym];
+  if(!r||r.error||r.valid===0) return "na";
+  if(r.score===r.valid && r.valid>0) return "bull";
+  if(r.score===0) return "bear";
+  return "mid";
+}
+// 目前的篩選狀態(依分頁各自記憶):null=全部
+const FILTER={ stocks:null, watch:null };
+function summaryHtml(list, pane){
+  let bull=0, bear=0;
+  list.forEach(h=>{ const t=trendOf(h.s); if(t==="bull") bull++; else if(t==="bear") bear++; });
+  const cur=FILTER[pane];
+  const chip=(kind,n,label)=>
+    `<button class="chip ${kind}${cur===kind?" on":""}" data-filter="${kind}" data-pane="${pane}"
+       aria-pressed="${cur===kind}"><div class="n">${n}</div><div class="cl">${label}</div></button>`;
   return `<div class="chips">
-    <div class="chip"><div class="n">${total}</div><div class="cl">追蹤</div></div>
-    <div class="chip bull"><div class="n">${bull}</div><div class="cl">多頭排列</div></div>
-    <div class="chip bear"><div class="n">${bear}</div><div class="cl">空頭排列</div></div>
-    <div class="chip na"><div class="n">${na}</div><div class="cl">無資料</div></div>
+    ${chip("bull",bull,"多頭排列")}
+    ${chip("bear",bear,"空頭排列")}
   </div>`;
 }
 function detailHtml(r){
@@ -521,21 +532,29 @@ function stockRow(sym, group, note, dn){
     <div class="detail">${ipHtml}${detailHtml(r)}</div>
   </div>`;
 }
-/* ---------- 持股分頁（僅統計 holdings 20 檔，依 watchlist 權重順序） ---------- */
+/* ---------- 個股分頁（僅統計 holdings 20 檔，依 watchlist 權重順序） ---------- */
 function renderStocks(){
   const list=(WL.holdings||[]);
-  let html=summaryHtml(list);
+  let html=summaryHtml(list,"stocks");
+  const f=FILTER.stocks;
+  const shown=f?list.filter(h=>trendOf(h.s)===f):list;
+  const title=f?`個股 · ${f==="bull"?"多頭排列":"空頭排列"}(${shown.length})`:"個股(權重順序)";
   const rowOf=h=>stockRow(h.s, null, h.note, h.dn);
-  html+=`<div class="blk"><h2>持股(權重順序)</h2>${list.map(rowOf).join("")}</div>`;
+  const body=shown.length?shown.map(rowOf).join(""):`<div class="row err"><div class="head"><span class="nd">目前沒有符合的個股</span></div></div>`;
+  html+=`<div class="blk"><h2>${title}</h2>${body}</div>`;
   document.getElementById("stocks").innerHTML=html;
 }
 
 /* ---------- 觀察清單分頁（清單順序，group 顯示在代號下方小字） ---------- */
 function renderWatch(){
   const list=(WL.watch||[]);
-  let html=summaryHtml(list);
+  let html=summaryHtml(list,"watch");
+  const f=FILTER.watch;
+  const shown=f?list.filter(h=>trendOf(h.s)===f):list;
+  const title=f?`觀察清單 · ${f==="bull"?"多頭排列":"空頭排列"}(${shown.length})`:"觀察清單";
   const rowOf=h=>stockRow(h.s, h.group, null, null);
-  html+=`<div class="blk"><h2>觀察清單</h2>${list.map(rowOf).join("")}</div>`;
+  const body=shown.length?shown.map(rowOf).join(""):`<div class="row err"><div class="head"><span class="nd">目前沒有符合的標的</span></div></div>`;
+  html+=`<div class="blk"><h2>${title}</h2>${body}</div>`;
   document.getElementById("watch").innerHTML=html;
 }
 
@@ -702,6 +721,14 @@ document.querySelectorAll(".tabs button").forEach(b=>{
   b.addEventListener("click",()=>switchTab(b.dataset.tab));
 });
 document.addEventListener("click",e=>{
+  // 多頭/空頭排列 chip:當成篩選 tab,再按一次取消
+  const fc=e.target.closest("[data-filter]");
+  if(fc){
+    const pane=fc.dataset.pane, kind=fc.dataset.filter;
+    FILTER[pane]=(FILTER[pane]===kind)?null:kind;
+    if(pane==="stocks") renderStocks(); else renderWatch();
+    return;
+  }
   // 彈窗內互動
   if(e.target.closest("#chartSheet")){
     const rb=e.target.closest("[data-range]"); if(rb){ CHART.range=rb.dataset.range; renderChart(); return; }
