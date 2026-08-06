@@ -29,6 +29,13 @@
   .refresh.spinning svg{animation:spin .8s linear infinite;}
   @keyframes spin{to{transform:rotate(360deg);}}
 
+  /* 跨 dashboard 導覽(與 .tabs 同款) */
+  .xnav{display:flex;gap:6px;margin-bottom:10px;}
+  .xtab{flex:1;text-align:center;font-size:13px;font-weight:600;padding:10px 4px;border-radius:10px;
+    background:#eceef1;color:var(--ink);text-decoration:none;}
+  .xtab.on{background:var(--ink);color:#fff;}
+  a.xtab:active{background:var(--line);}
+
   /* top tabs */
   .tabs{position:sticky;top:0;z-index:10;display:flex;gap:6px;background:var(--bg);
     padding:10px 4px;margin-bottom:8px;}
@@ -209,9 +216,12 @@
 </style>
 </head>
 <body>
-<!-- 本機擴充(選用):local-nav.js 不進 git,只存在本機;線上載入 404 時靜默略過 -->
-<script src="local-nav.js" defer></script>
 <div class="wrap">
+  <!-- 跨 dashboard 導覽:槓桿風險板永遠在本機(file://),線上點擊改為複製路徑 -->
+  <nav class="xnav">
+    <span class="xtab on">Market Compass</span>
+    <a class="xtab" id="xnavLev" href="../ib-leverage-dashboard/public/index.html">槓桿風險 ↗</a>
+  </nav>
   <header>
     <div>
       <h1>Market Compass</h1>
@@ -761,6 +771,21 @@ document.addEventListener("click",e=>{
   }
 });
 document.addEventListener("keydown",e=>{ if(e.key==="Escape") closeChart(); });
+
+/* 跨 dashboard 導覽:本機(file:)直接相對路徑開槓桿板;
+   線上(https)瀏覽器禁止開本機檔案,改為複製 file:// 路徑請使用者貼到網址列 */
+(function(){
+  const a=document.getElementById("xnavLev");
+  if(!a||location.protocol==="file:") return;
+  const p="file:///Users/hsuan.chou/Projects/ib-leverage-dashboard/public/index.html";
+  a.addEventListener("click",e=>{
+    e.preventDefault();
+    if(navigator.clipboard) navigator.clipboard.writeText(p).catch(()=>{});
+    const orig=a.textContent;
+    a.textContent="已複製路徑 ✓ 貼到網址列開啟";
+    setTimeout(()=>{ a.textContent=orig; },2600);
+  });
+})();
 
 /* ---------- load（讀取 watchlist.json / data.json,refresh 按鈕重抓同一流程） ---------- */
 const refreshBtn=document.getElementById("refreshBtn");
