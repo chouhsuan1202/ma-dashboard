@@ -1,5 +1,6 @@
 __pycache__/
 lev.json
+local-nav.js
 .DS_Store
 node_modules/
 package*.json
