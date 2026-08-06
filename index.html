@@ -79,19 +79,16 @@
   .rule .msg{font-size:15px;font-weight:700;}
   .rule .why{font-size:11.5px;color:var(--muted);margin-top:2px;}
 
-  /* summary chips */
-  .chips{display:flex;gap:8px;margin-bottom:14px;overflow-x:auto;-webkit-overflow-scrolling:touch;
-    flex-wrap:wrap;padding-bottom:2px;}
-  .chip{flex:none;background:var(--card);border:1px solid var(--line);border-radius:12px;
-    padding:8px 12px;text-align:center;min-width:70px;}
-  .chip .n{font-size:18px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.1;}
-  .chip .cl{font-size:11px;color:var(--muted);margin-top:2px;}
-  .chip.bull .n{color:var(--up);} .chip.bear .n{color:var(--dn);} .chip.na .n{color:var(--faint);}
-  /* chip 當篩選 tab 用:可點、選中時反白 */
-  .chip{cursor:pointer;font:inherit;text-align:center;}
-  .chip.on{background:var(--ink);border-color:var(--ink);}
-  .chip.on .cl{color:#fff;}
-  .chip.bull.on .n{color:#4ade80;} .chip.bear.on .n{color:#fca5a5;}
+  /* 篩選列:大盤=全部/歐洲/台灣,個股與觀察清單=全部/多頭排列/空頭排列 */
+  .filterbar{display:flex;gap:4px;background:#eceef1;border-radius:12px;padding:4px;margin-bottom:14px;}
+  .filterbar .fbtn{flex:1;border:none;background:transparent;color:var(--muted);font:inherit;
+    font-size:12.5px;font-weight:700;padding:9px 6px;border-radius:9px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap;}
+  .filterbar .fbtn .fn{font-size:12px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--faint);}
+  .filterbar .fbtn.on{background:var(--card);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.10);}
+  .filterbar .fbtn.on .fn{color:var(--ink);}
+  .filterbar .fbtn.bull.on .fn{color:var(--up);}
+  .filterbar .fbtn.bear.on .fn{color:var(--dn);}
 
   /* top strip: 今日均線訊號（單欄全寬） */
   .topstrip{margin-bottom:14px;}
@@ -397,12 +394,22 @@ function renderMacro(){
     .map((h,i)=>({h,i}))
     .sort((a,b)=>(rank(a.h)-rank(b.h))||(a.i-b.i))
     .map(x=>bigHoldCard(x.h.s)).join("");
-  const euCards=cardsOf(mh.filter(h=>!isTW(h.s)));
-  const twCards=cardsOf(mh.filter(h=>isTW(h.s)));
+  const eu=mh.filter(h=>!isTW(h.s)), tw=mh.filter(h=>isTW(h.s));
+  // 區域篩選列(全部 / 歐洲大盤 / 台灣大盤)
+  const cur=FILTER.macro||"all";
+  const btn=(kind,label,n)=>
+    `<button class="fbtn${cur===kind?" on":""}" data-filter="${kind}" data-pane="macro"
+       aria-pressed="${cur===kind}">${label}<span class="fn">${n}</span></button>`;
+  const bar=`<div class="filterbar" role="group" aria-label="區域篩選">
+    ${btn("all","全部",eu.length+tw.length)}
+    ${btn("eu","歐洲大盤",eu.length)}
+    ${btn("tw","台灣大盤",tw.length)}
+  </div>`;
+  const euBlk=`<div class="blk"><h2>歐洲大盤</h2><div class="cards">${cardsOf(eu)}</div></div>`;
+  const twBlk=`<div class="blk"><h2>台灣大盤</h2><div class="cards">${cardsOf(tw)}</div></div>`;
   // NDX 大盤方向已整合進頂部訊號卡(ndxNoteHtml);指數卡不顯示,NDX/VIX 數據仍供燈號判斷用
   document.getElementById("macro").innerHTML =
-    `<div class="blk"><h2>歐洲大盤</h2><div class="cards">${euCards}</div></div>` +
-    `<div class="blk"><h2>台灣大盤</h2><div class="cards">${twCards}</div></div>`;
+    bar + (cur==="tw"?"":euBlk) + (cur==="eu"?"":twBlk);
 }
 
 /* ---------- 訊號（統計 market_holdings + holdings + watch 全部） ---------- */
@@ -485,20 +492,27 @@ function trendOf(sym){
   if(r.score===0) return "bear";
   return "mid";
 }
-// 目前的篩選狀態(依分頁各自記憶):null=全部
-const FILTER={ stocks:null, watch:null };
+// 目前的篩選狀態(依分頁各自記憶):all=全部
+const FILTER={ stocks:"all", watch:"all", macro:"all" };
 function summaryHtml(list, pane){
   let bull=0, bear=0;
   list.forEach(h=>{ const t=trendOf(h.s); if(t==="bull") bull++; else if(t==="bear") bear++; });
-  const cur=FILTER[pane];
-  const chip=(kind,n,label)=>
-    `<button class="chip ${kind}${cur===kind?" on":""}" data-filter="${kind}" data-pane="${pane}"
-       aria-pressed="${cur===kind}"><div class="n">${n}</div><div class="cl">${label}</div></button>`;
-  return `<div class="chips">
-    ${chip("bull",bull,"多頭排列")}
-    ${chip("bear",bear,"空頭排列")}
+  const cur=FILTER[pane]||"all";
+  const btn=(kind,label,n)=>
+    `<button class="fbtn ${kind}${cur===kind?" on":""}" data-filter="${kind}" data-pane="${pane}"
+       aria-pressed="${cur===kind}">${label}<span class="fn">${n}</span></button>`;
+  return `<div class="filterbar" role="group" aria-label="篩選">
+    ${btn("all","全部",list.length)}
+    ${btn("bull","多頭排列",bull)}
+    ${btn("bear","空頭排列",bear)}
   </div>`;
 }
+// 依目前篩選取子集
+function applyFilter(list, pane){
+  const f=FILTER[pane]||"all";
+  return f==="all"?list:list.filter(h=>trendOf(h.s)===f);
+}
+const FILTER_LBL={ bull:"多頭排列", bear:"空頭排列" };
 function detailHtml(r){
   const rows=[5,20,60,240].map(k=>{
     const m=maByK(r,k);
@@ -539,8 +553,8 @@ function renderStocks(){
   const list=(WL.holdings||[]);
   let html=summaryHtml(list,"stocks");
   const f=FILTER.stocks;
-  const shown=f?list.filter(h=>trendOf(h.s)===f):list;
-  const title=f?`個股 · ${f==="bull"?"多頭排列":"空頭排列"}(${shown.length})`:"個股(權重順序)";
+  const shown=applyFilter(list,"stocks");
+  const title=FILTER_LBL[f]?`個股 · ${FILTER_LBL[f]}(${shown.length})`:"個股(權重順序)";
   const rowOf=h=>stockRow(h.s, null, h.note, h.dn);
   const body=shown.length?shown.map(rowOf).join(""):`<div class="row err"><div class="head"><span class="nd">目前沒有符合的個股</span></div></div>`;
   html+=`<div class="blk"><h2>${title}</h2>${body}</div>`;
@@ -552,8 +566,8 @@ function renderWatch(){
   const list=(WL.watch||[]);
   let html=summaryHtml(list,"watch");
   const f=FILTER.watch;
-  const shown=f?list.filter(h=>trendOf(h.s)===f):list;
-  const title=f?`觀察清單 · ${f==="bull"?"多頭排列":"空頭排列"}(${shown.length})`:"觀察清單";
+  const shown=applyFilter(list,"watch");
+  const title=FILTER_LBL[f]?`觀察清單 · ${FILTER_LBL[f]}(${shown.length})`:"觀察清單";
   const rowOf=h=>stockRow(h.s, h.group, null, null);
   const body=shown.length?shown.map(rowOf).join(""):`<div class="row err"><div class="head"><span class="nd">目前沒有符合的標的</span></div></div>`;
   html+=`<div class="blk"><h2>${title}</h2>${body}</div>`;
@@ -723,12 +737,12 @@ document.querySelectorAll(".tabs button").forEach(b=>{
   b.addEventListener("click",()=>switchTab(b.dataset.tab));
 });
 document.addEventListener("click",e=>{
-  // 多頭/空頭排列 chip:當成篩選 tab,再按一次取消
+  // 篩選列(大盤區域 / 個股與觀察清單的多空排列):切換後重繪該分頁
   const fc=e.target.closest("[data-filter]");
   if(fc){
-    const pane=fc.dataset.pane, kind=fc.dataset.filter;
-    FILTER[pane]=(FILTER[pane]===kind)?null:kind;
-    if(pane==="stocks") renderStocks(); else renderWatch();
+    const pane=fc.dataset.pane;
+    FILTER[pane]=fc.dataset.filter;
+    ({stocks:renderStocks, watch:renderWatch, macro:renderMacro})[pane]();
     return;
   }
   // 彈窗內互動
